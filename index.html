@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taareid</title>
+    <style>
+        body {
+            margin: 0; overflow: hidden;
+            transition: 1s;
+        }
+        canvas {
+            display: block;
+            transition: 1s;
+        }
+        #userDataDisplay {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            transition: 1s;
+        }
+        #informationbar{
+            font-weight: bold;
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            height: 30px;
+            width: 100vw;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            gap: 20px;
+            font-size: 15px;
+            transition: 1s;
+        }
+        .infobox{
+            color: white;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 12px;
+            margin-left: 10px;
+            margin-right: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 5px;
+            transition: 1s;
+        }
+        #informationbar button{
+            border: none;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            border-radius: 10px;
+            padding: 5px 10px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 10px;
+            transition: 1s;
+        }
+        #functions button{
+            border: none;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 10px;
+            padding: 20px 10px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 15px;
+            width: 95%;
+            margin-top: 10px;
+            transition: 1s;
+        }
+        #functions{
+            position: absolute;
+            top: 50px;
+            left: 5px;
+            padding: 10px;
+            background: transparent;
+            color: white;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 15px;
+            display: flex;
+            /* put everything under each other */
+            flex-direction: column;
+            /* put everything in the center */
+            align-items: center;
+            transition: 1s;
+        }
+        select{
+            border: none;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 1s;
+        }
+        #alertmessage{
+          margin-top: 20px;
+          text-align: center;
+          padding: 10px;
+          width: 78%;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: white;
+          border: none;
+          border-radius: 5px;
+          font-size: 15px;
+          display: none;
+          transition: 1s;
+        }
+        #alertmessagebtn{
+          margin-top: 20px;
+          padding: 10px;
+          width: 20%;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: white;
+          border: none;
+          border-radius: 5px;
+          font-size: 15px;
+          display: none;
+          cursor: pointer;
+          transition: 1s;
+        }
+        #alertElement{
+          display: flex;
+          justify-content: space-between;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          z-index: 999;
+          transition: 1s;
+        }
+        @keyframes fadeIn{
+          0%{
+            opacity: 0;
+            transform: translateY(-100px);
+          }
+          100%{
+            opacity: 1;
+            transform: translateY(0px);
+          }
+        }
+        @keyframes fadeOut{
+          0%{
+            opacity: 1;
+            transform: translateY(0);
+          }
+          100%{
+            opacity: 0;
+            transform: translateY(-100px);
+          }
+        }
+        #editbox {
+            display: none;
+            position: absolute;
+            left: 25%;
+            top: 5%;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            width: 50%;
+            padding: 20px;
+            top: 40%;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 20px;
+            transition: 1s;
+        }
+        #editbox button{
+            border: none;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 15px;
+            transition: 1s;
+        }
+        input[type="text"]{
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 1s;
+            border: none;
+        }
+        select:focus{
+            outline: none;
+        }
+        input[type="text"]:focus{
+            outline: none;
+            transform: scale(2);
+        }
+        #fightDataDisplay{
+            display: none;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            font-size: 4em;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        #jcsbnum{
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            width: 25%;
+        }
+        #hamebtn{
+            font-size: 2em;
+            margin-left: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="alertElement">
+        <button id="alertmessage">text</button><button id="alertmessagebtn">ok</button>
+    </div>
+    <div id="informationbar">
+        <div class="infobox"><div id="hamebtn">⌂</div></div>
+        <div class="infobox">you: <div id="username">Guest</div></div>
+        <div class="infobox">population: <div id="population">0</div></div>
+        <div class="infobox">workers: <div id="workers">0</div></div>
+        <div class="infobox">soldiers: <div id="soldiers">0</div></div>
+        <div class="infobox">gold: <div id="gold">0</div></div>
+        <button id="edit">Edit: OFF</button>
+    </div>
+    <div id="functions">
+        <button id="tradebtn">Trade</button>
+        <button id="createjobbtn">create jobs</button>
+        <button id="createcitizensbtn">Citizens</button>
+        <button id="shopbtn">shop</button>
+        <button id="sellbtn">sell</button>
+        <button id="fightbtn">fight</button>
+    </div>
+    <div id="editbox" class="traids">
+        <label for="computer-number-select">get</label>
+        <select id="computer-number-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+            <option value="60">60</option>
+            <option value="80">80</option>
+            <option value="100">100</option>
+            <!--<option value="population">people</option>-->
+        </select>
+        <label for="take-select">:</label>
+        <select id="take-select">
+            <option value="cows">cows</option>
+            <option value="goats">goats</option>
+            <option value="chickens">chickens</option>
+            <option value="horses">horses</option>
+            <option value="meat">meat</option>
+            <option value="eggs">eggs</option>
+            <option value="soldiers">soldiers</option>
+            <option value="ricefields">ricefields</option>
+            <option value="cornfields">cornfields</option>
+            <option value="rice">rice</option>
+            <option value="corn">corn</option>
+            <option value="weapons">weapons</option>
+            <option value="milk">milk</option>
+            <!--<option value="population">people</option>-->
+        </select>
+        <label for="player-number-select">give</label>
+        <select id="player-number-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+            <option value="60">60</option>
+            <option value="80">80</option>
+            <option value="100">100</option>
+            <!--<option value="population">people</option>-->
+        </select>
+        <label for="give-select">:</label>
+        <select id="give-select">
+            <option value="cows">cows</option>
+            <option value="goats">goats</option>
+            <option value="chickens">chickens</option>
+            <option value="horses">horses</option>
+            <option value="meat">meat</option>
+            <option value="eggs">eggs</option>
+            <option value="soldiers">soldiers</option>
+            <option value="ricefields">ricefields</option>
+            <option value="cornfields">cornfields</option>
+            <option value="rice">rice</option>
+            <option value="corn">corn</option>
+            <option value="weapons">weapons</option>
+            <option value="milk">milk</option>
+            <!--<option value="population">people</option>-->
+        </select>
+        <button onclick="Trade()">Trade</button>
+    </div>
+    <!--<div id="editbox" class="createsoldiersdiv">
+        <label for="select-soldiers-number">create</label>
+        <select id="select-soldiers-number">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+            <option value="60">60</option>
+            <option value="80">80</option>
+            <option value="100">100</option>
+        </select>
+        <label for="select-soldiers-number">Soldiers</label>
+        <button onclick="CreateSoldiers()">Create</button>
+    </div>-->
+    <div id="editbox" class="createjobdiv">
+        <label for="select-jobtype-number">create</label>
+        <select id="select-jobtype-number">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+            <option value="60">60</option>
+            <option value="80">80</option>
+            <option value="100">100</option>
+            <!--<option value="population">people</option>-->
+        </select>
+        <select id="select-job-type">
+            <option value="workers">workers</option>
+            <option value="soldiers">soldiers</option>
+            <!--<option value="population">people</option>-->
+        </select>
+        <button onclick="CreateJob()">Create</button>
+    </div>
+    <div id="editbox" class="shopdiv">
+        <label for="select-item-number">buy</label>
+        <select id="select-item-number">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+            <option value="60">60</option>
+            <option value="70">70</option>
+            <option value="80">80</option>
+            <option value="90">90</option>
+            <option value="100">100</option>
+            <option value="150">150</option>
+            <option value="200">200</option>
+        </select>
+        <select id="select-shopping-item">
+            <option value="cows">cows</option>
+            <option value="goats">goats</option>
+            <option value="chickens">chickens</option>
+            <option value="horses">horses</option>
+            <option value="meat">meat</option>
+            <option value="eggs">eggs</option>
+            <option value="soldiers">soldiers</option>
+            <option value="ricefields">ricefields</option>
+            <option value="cornfields">cornfields</option>
+            <option value="rice">rice</option>
+            <option value="corn">corn</option>
+            <option value="weapons">weapons</option>
+            <option value="milk">milk</option>
+            <!--<option value="population">people</option>-->
+        </select>
+        <label for="select-item-value-input">for</label>
+        
+        <!-- number input-->
+        <input type="text" id="select-item-value-input">
+        <button onclick="shop()">get</button>
+    </div>
+    <div id="editbox" class="selldiv">
+        <label for="sell-item-number">sell</label>
+        <select id="sell-item-number">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+            <option value="60">60</option>
+            <option value="70">70</option>
+            <option value="80">80</option>
+            <option value="90">90</option>
+            <option value="100">100</option>
+            <option value="150">150</option>
+            <option value="200">200</option>
+        </select>
+        <select id="select-sell-item">
+            <option value="cows">cows</option>
+            <option value="goats">goats</option>
+            <option value="chickens">chickens</option>
+            <option value="horses">horses</option>
+            <option value="meat">meat</option>
+            <option value="eggs">eggs</option>
+            <option value="soldiers">soldiers</option>
+            <option value="ricefields">ricefields</option>
+            <option value="cornfields">cornfields</option>
+            <option value="rice">rice</option>
+            <option value="corn">corn</option>
+            <option value="weapons">weapons</option>
+            <option value="milk">milk</option>
+            <!--<option value="population">people</option>-->
+        </select>
+        <!-- number input-->
+        <label for="sell-item-value-input">for</label>
+        <input type="text" id="sell-item-value-input">
+        <button onclick="sell()">sell</button>
+    </div>
+    <div id="editbox" class="createcitizensdiv">
+        <label for="select-type-number">create</label>
+        <select id="select-type-number">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+            <option value="60">60</option>
+            <option value="80">80</option>
+            <option value="100">100</option>
+            <!--<option value="population">people</option>-->
+        </select>
+        <label for="select-type-name">citizens from</label>
+        <select id="select-type-name">
+            <option value="workers">workers</option>
+            <option value="soldiers">soldiers</option>
+        </select>
+        <button onclick="CreateCitizens()">Create</button>
+    </div>
+    <div id="editbox" class="fightdiv">
+        <select id="strategy-name-selector">
+            <option value="invade">invade</option>
+            <option value="battle">battle</option>
+            <option value="attack">attack</option>
+        </select>
+        <label for="soldier-number-selector-fb">with</label>
+        <input type="text" id="soldier-number-selector-fb">
+        <label for="soldier-number-selector-fb">soldiers</label>
+        <button onclick="fight()">fight</button>
+    </div>
+    <div id="userDataDisplay">Keine Schlossdaten ausgewählt</div>
+    <div id="fightDataDisplay">
+        <div id="jcsbnum">soldiers<div id="soldierfightnum">0</div></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        function showalert(AlertText){
+            let alertbtn = document.getElementById('alertmessagebtn');
+            let alertmessage = document.getElementById('alertmessage');
+            let alertelement = document.getElementById('alertElement');
+
+            if (!alertbtn || !alertmessage || !alertelement) {
+                console.error('Alert elements not found');
+                return;
+            }
+
+            alertmessage.textContent = AlertText;
+            alertmessage.style.display = "block";
+            alertbtn.style.display = "block";
+            alertbtn.style.animation = "none";
+            void alertbtn.offsetWidth; // Trigger reflow
+            alertbtn.style.animation = "fadeIn 1s ease-in";
+            alertmessage.style.animation = "none";
+            void alertmessage.offsetWidth; // Trigger reflow
+            alertmessage.style.animation = "fadeIn 1s ease-in";
+
+            const hideAlert = () => {
+                alertbtn.style.animation = "none";
+                void alertbtn.offsetWidth; // Trigger reflow
+                alertbtn.style.animation = "fadeOut 1s ease-out";
+                alertmessage.style.animation = "none";
+                void alertmessage.offsetWidth; // Trigger reflow
+                alertmessage.style.animation = "fadeOut 1s ease-out";
+
+                setTimeout(() => {
+                    alertmessage.style.display = "none";
+                    alertbtn.style.display = "none";
+                }, 1000);
+            };
+
+            alertbtn.removeEventListener("click", hideAlert); // Ensure no duplicate listeners
+            alertbtn.addEventListener("click", hideAlert);
+        }
+        let scene, camera, renderer, ground, touchX, touchY, isTouching = false, isMouseDown = false, mouseX, mouseY;
+
+        const mouse = new THREE.Vector2();
+        const raycaster = new THREE.Raycaster();
+
+        let selectedObject;
+        let playerCastle;
+        let castleData = [
+            {
+                position: { x: -100, z: -150 }, force: 100, soldiers: 1000, gold: 1000000, size: 3, type: 'fortress',
+                strength: 175, friend: false, population: 3000, queen: 'nobody', king: 'computer',
+                horses: 10, cows: 5, goats: 20, chickens: 50, ricefields: 3, cornfields: 3,
+                workers: 50, weapons: 100, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 3
+            },
+            {
+                position: { x: 100, z: 100 }, force: 45, soldiers: 150, gold: 100000, size: 2, type: 'tower',
+                strength: 600, friend: false, population: 1000, queen: 'nobody', king: 'computer',
+                horses: 5, cows: 0, goats: 15, chickens: 20, ricefields: 0, cornfields: 1,
+                workers: 100, weapons: 100, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 2
+            },
+            {
+                position: { x: 0, z: 0 }, force: 10, soldiers: 10, gold: 50, size: 1, type: 'castle',
+                strength: 15, friend: true, population: 30, queen: 'nobody', king: 'Guest',
+                horses: 0, cows: 2, goats: 2, chickens: 2, ricefields: 0, cornfields: 0,
+                workers: 10, weapons: 10, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 1
+            }
+        ];
+        let addedcastle = [];
+        let dataChanged = false;
+        let resourcesChanged = false;
+
+        let tradebtn = document.getElementById('tradebtn');
+        tradebtn.addEventListener('click', () => {
+            let tradediv = document.querySelector('.traids');
+            if (selectedObject && playerCastle){
+                let selldiv = document.querySelector('.selldiv');
+                let shopdiv = document.querySelector('.shopdiv');
+                let createjobdiv = document.querySelector('.createjobdiv');
+                let createcitizensdiv = document.querySelector('.createcitizensdiv');
+                let fightdiv = document.querySelector('.fightdiv');
+                if(tradediv.style.display == 'block'){
+                    tradediv.style.display = 'none';
+                }else if (selectedObject.userData.king != playerCastle.children[1].userData.king){
+                    selldiv.style.display = 'none';
+                    shopdiv.style.display = 'none';
+                    tradediv.style.display = 'block';
+                    createjobdiv.style.display = 'none';
+                    createcitizensdiv.style.display = 'none';
+                    fightdiv.style.display = 'none';
+                }else {
+                    if (selectedObject.userData.king == playerCastle.children[1].userData.king){
+                        showalert('you can not trade with yourself');
+                    }
+                }
+            }else {
+                if (!selectedObject){
+                    showalert('you have not selected a castle');
+                }else {
+                    showalert('please try again');
+                }
+                tradediv.style.display = 'none';
+            }
+        });
+        /*let createsoldiersbtn = document.getElementById('createsoldiersbtn');
+        createsoldiersbtn.addEventListener('click', () => {
+            let createjobdiv = document.querySelector('.createjobdiv');
+            let createcitizensdiv = document.querySelector('.createcitizensdiv');
+            let tradediv = document.querySelector('.traids');
+            if (createjobdiv.style.display == 'block'){
+                createjobdiv.style.display = 'none';
+            }else {
+                createjobdiv.style.display = 'block';
+                createcitizensdiv.style.display = 'none';
+                tradediv.style.display = 'none';
+            }
+        });*/
+        let createjobbtn = document.getElementById('createjobbtn');
+        createjobbtn.addEventListener('click', () => {
+            let selldiv = document.querySelector('.selldiv');
+            let shopdiv = document.querySelector('.shopdiv');
+            let createjobdiv = document.querySelector('.createjobdiv');
+            let createcitizensdiv = document.querySelector('.createcitizensdiv');
+            let tradediv = document.querySelector('.traids');
+            let fightdiv = document.querySelector('.fightdiv');
+            if (createjobdiv.style.display == 'block'){
+                createjobdiv.style.display = 'none';
+            }else {
+                selldiv.style.display = 'none';
+                shopdiv.style.display = 'none';
+                createjobdiv.style.display = 'block';
+                createcitizensdiv.style.display = 'none';
+                tradediv.style.display = 'none';
+                fightdiv.style.display = 'none';
+            }
+        });
+        let createcitizensbtn = document.getElementById('createcitizensbtn');
+        createcitizensbtn.addEventListener('click', () => {
+            let selldiv = document.querySelector('.selldiv');
+            let shopdiv = document.querySelector('.shopdiv');
+            let createjobdiv = document.querySelector('.createjobdiv');
+            let createcitizensdiv = document.querySelector('.createcitizensdiv');
+            let tradediv = document.querySelector('.traids');
+            let fightdiv = document.querySelector('.fightdiv');
+            if (createcitizensdiv.style.display == 'block'){
+                createcitizensdiv.style.display = 'none';
+            }else {
+                selldiv.style.display = 'none';
+                shopdiv.style.display = 'none';
+                createjobdiv.style.display = 'none';
+                createcitizensdiv.style.display = 'block';
+                tradediv.style.display = 'none';
+                fightdiv.style.display = 'none';
+            }
+        });
+
+        let shopbtn = document.getElementById('shopbtn');
+        shopbtn.addEventListener('click', () => {
+            let shopdiv = document.querySelector('.shopdiv');
+            if (selectedObject && playerCastle && playerCastle.children[0].userData.king != selectedObject.userData.king){
+                let selldiv = document.querySelector('.selldiv');
+                let createjobdiv = document.querySelector('.createjobdiv');
+                let createcitizensdiv = document.querySelector('.createcitizensdiv');
+                let traidediv = document.querySelector('.traids');
+                let fightdiv = document.querySelector('.fightdiv');
+                if (shopdiv.style.display == 'block') {
+                    shopdiv.style.display = 'none';
+                }else {
+                    selldiv.style.display = 'none';
+                    shopdiv.style.display = 'block';
+                    createjobdiv.style.display = 'none';
+                    createcitizensdiv.style.display = 'none';
+                    traidediv.style.display = 'none';
+                    fightdiv.style.display = 'none';
+                }
+            }else {
+                if (!selectedObject){
+                    showalert('select a castle to buy from and try again');
+                }else if (!playerCastle){
+                    showalert('please try again');
+                }else if (playerCastle.children[0].userData.king == selectedObject.userData.king){
+                    showalert('you can not shop in your own castle');
+                }
+                shopdiv.style.display = 'none';
+            }
+        });
+
+        let sellbtn = document.getElementById('sellbtn');
+        sellbtn.addEventListener('click', () => {
+            let selldiv = document.querySelector('.selldiv');
+            if (selectedObject && playerCastle && playerCastle.children[0].userData.king != selectedObject.userData.king){
+                let createjobdiv = document.querySelector('.createjobdiv');
+                let createcitizensdiv = document.querySelector('.createcitizensdiv');
+                let shopdiv = document.querySelector('.shopdiv');
+                let traidediv = document.querySelector('.traids');
+                let fightdiv = document.querySelector('.fightdiv');
+                if (selldiv.style.display == 'block') {
+                    selldiv.style.display = 'none';
+                }else {
+                    selldiv.style.display = 'block';
+                    createjobdiv.style.display = 'none';
+                    createcitizensdiv.style.display = 'none';
+                    shopdiv.style.display = 'none';
+                    traidediv.style.display = 'none';
+                    fightdiv.style.display = 'none';
+                }
+            }else {
+                if (!selectedObject){
+                    showalert('select a castle too sell to and try again');
+                }else if (!playerCastle){
+                    showalert('please try again');
+                }else if (playerCastle.children[0].userData.king == selectedObject.userData.king){
+                    showalert('you can not sell too your own castle');
+                }
+                selldiv.style.display = 'none';
+            }
+        });
+
+        let fightbtn = document.getElementById('fightbtn');
+        fightbtn.addEventListener('click', () => {
+            let fightdiv = document.querySelector('.fightdiv');
+            if (selectedObject && playerCastle && playerCastle.children[0].userData.king != selectedObject.userData.king){
+                let createjobdiv = document.querySelector('.createjobdiv');
+                let createcitizensdiv = document.querySelector('.createcitizensdiv');
+                let shopdiv = document.querySelector('.shopdiv');
+                let selldiv = document.querySelector('.selldiv');
+                let traidediv = document.querySelector('.traids');
+                if (selldiv.style.display == 'block') {
+                    selldiv.style.display = 'none';
+                }else {
+                    selldiv.style.display = 'none';
+                    createjobdiv.style.display = 'none';
+                    createcitizensdiv.style.display = 'none';
+                    shopdiv.style.display = 'none';
+                    traidediv.style.display = 'none';
+                    fightdiv.style.display = 'block';
+                }
+            }else {
+                if (!selectedObject){
+                    showalert('select a castle too fight and try again');
+                }else if (!playerCastle){
+                    showalert('please try again');
+                }else if (playerCastle.children[0].userData.king == selectedObject.userData.king){
+                    showalert('you can not fight with your own castle');
+                }
+                fightdiv.style.display = 'none';
+            }
+        });
+        function CreateSoldiers() {
+            let soldiers = document.getElementById('select-soldiers-number').value;
+            if(playerCastle){
+                playerCastle.children.forEach(child => {
+                    if ((child.userData.population - child.userData.workers - child.userData.soldiers) >= parseInt(soldiers)){
+                        child.userData.soldiers += parseInt(soldiers);
+                        playerCastle.userData.soldiers += parseInt(soldiers);
+                        dataChanged = true;
+                        updateUserDataDisplay(child.userData);
+                    }else {
+                        showalert('you do not have enough citizens');
+                    }
+                });
+            }
+        }
+        function CreateCitizens() {
+            let typename = document.getElementById('select-type-name').value;
+            let typenum = document.getElementById('select-type-number').value;
+            if(playerCastle){
+                playerCastle.children.forEach(child => {
+                    if (child.userData[typename] >= parseInt(typenum)){
+                        child.userData[typename] -= parseInt(typenum);
+                        playerCastle.userData[typename] -= parseInt(typenum);
+                        dataChanged = true;
+                        updateUserDataDisplay(child.userData);
+                    }else {
+                        showalert(`you do not have enough ${typename}`);
+                    }
+                });
+            }
+        }
+        function CreateJob() {
+            let jobtypenum = document.getElementById('select-jobtype-number').value;
+            let jobtypename = document.getElementById('select-job-type').value;
+            if(playerCastle){
+                playerCastle.children.forEach(child => {
+                    if ((child.userData.population - child.userData.workers - child.userData.soldiers) >= parseInt(jobtypenum)){
+                        child.userData[jobtypename] += parseInt(jobtypenum);
+                        playerCastle.userData[jobtypename] += parseInt(jobtypenum);
+                        dataChanged = true;
+                        updateUserDataDisplay(child.userData);
+                    }else {
+                        showalert('you do not have enough citizens');
+                    }
+                });
+            }
+        }
+        function init() {
+            scene = new THREE.Scene();
+            const backgroundColor = 0x87CEEB; // Schönes, dunkles Grün für den Boden und den Hintergrund
+            scene.background = new THREE.Color(backgroundColor);
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
+            camera.position.set(0, 100, 200); // Kamera hoch und weiter hinten, um mehr vom Boden zu sehen
+            camera.rotation.x = -0.5;
+
+            let hamebtn = document.getElementById('hamebtn');
+
+            // Verwende die Funktion so:
+            hamebtn.addEventListener('click', () => {
+                // slowly move the camara to the initial position: camera.position.set(0, 100, 200);
+                moveCameraToTarget(500);
+            });
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true; // Schatten aktivieren
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Weiche Schatten für bessere Qualität
+            document.body.appendChild(renderer.domElement);
+
+            // Erstelle den Boden
+            const groundSize = 2000; // Sehr großer Boden für die gesamte Fläche
+            const groundGeometry = new THREE.PlaneGeometry(groundSize, groundSize);
+            const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x3a5f0b });
+            ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true; // Boden empfängt Schatten
+            scene.add(ground);
+
+            function moveCameraToTarget(duration) {
+                const targetPosition = new THREE.Vector3(0, 100, 200);
+                const startPosition = camera.position.clone();
+                const distance = targetPosition.clone().sub(startPosition);
+
+                let startTime = null;
+
+                function animateCamera(time) {
+                    if (!startTime) startTime = time;
+
+                    const elapsedTime = time - startTime;
+                    const progress = Math.min(elapsedTime / duration, 1); // Fortschritt von 0 bis 1
+
+                    camera.position.x = startPosition.x + distance.x * progress;
+                    camera.position.y = startPosition.y + distance.y * progress;
+                    camera.position.z = startPosition.z + distance.z * progress;
+
+                    ground.position.x = startPosition.x + distance.x * progress;
+                    ground.position.z = startPosition.z + distance.z * progress;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animateCamera);
+                    }
+                }
+
+                requestAnimationFrame(animateCamera);
+            }
+
+            // Lichtquellen hinzufügen
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Helleres, gleichmäßiges Licht
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 2); // Helleres Licht für deutliche Schatten
+            directionalLight.position.set(100, 300, 100);
+            directionalLight.castShadow = true; // Lichtquelle wirft Schatten
+            directionalLight.shadow.mapSize.width = 2048; // Schattengröße für schärfere Schatten
+            directionalLight.shadow.mapSize.height = 2048;
+
+            // Shadow Camera Einstellungen
+            directionalLight.shadow.camera.left = -groundSize / 2;
+            directionalLight.shadow.camera.right = groundSize / 2;
+            directionalLight.shadow.camera.top = groundSize / 2;
+            directionalLight.shadow.camera.bottom = -groundSize / 2;
+            directionalLight.shadow.camera.near = 1;
+            directionalLight.shadow.camera.far = 2000;
+
+            scene.add(directionalLight);
+
+            // Schlösser aus JSON-Datei laden und platzieren
+            loadCastlesFromJSON();
+
+            // Event Listener für Touch Controls
+            let worldcanvas = renderer.domElement;
+            worldcanvas.addEventListener('touchstart', onTouchStart, false);
+            window.addEventListener('touchmove', onTouchMove, false);
+            window.addEventListener('touchend', onTouchEnd, false);
+
+            // mouse events
+
+            worldcanvas.addEventListener('mousedown', onMouseDown, false);
+            window.addEventListener('mousemove', onMouseMove, false);
+            window.addEventListener('mouseup', onMouseUp, false);
+
+            // Start der periodischen Überprüfung und Aktualisierung der Daten
+            setInterval(updateCastleResources, 100000);
+            setInterval(updateCastleStrength, 500);
+            setInterval(updatePopulation, 200000);
+        }
+
+        function createCastle(type) {
+            switch(type) {
+                case 'fortress':
+                    return new THREE.BoxGeometry(15, 30, 15); // Beispiel: größere Festung
+                case 'tower':
+                    return new THREE.CylinderGeometry(7, 7, 30, 32); // Beispiel: Turm
+                default:
+                    return new THREE.BoxGeometry(10, 20, 10); // Standard Schloss
+            }
+        }
+
+        function getMaterial(strength) {
+            const materialStrength = Math.min(Math.max((strength / 100), 1), 10); // Begrenzung von 1 bis 10
+            return new THREE.MeshStandardMaterial({ 
+                color: 0x707070, 
+                metalness: materialStrength / 10, 
+                roughness: 1 - (materialStrength / 10)
+            });
+        }
+
+        let allcastles = [];
+
+        function createCastlesmall(meaterial, friend, soldiers, people, gold, force, strength, type, height) {
+            const castleGroup = new THREE.Group();
+
+            // Zentrale Struktur des Schlosses
+            const baseGeometry = new THREE.CylinderGeometry(6, 6, height, 30);// 25
+            const baseMaterial = meaterial;
+            const baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
+            baseMesh.position.y = 0;
+            castleGroup.add(baseMesh);
+
+            // Rundes, spitzes Dach
+            const roofGeometry = new THREE.ConeGeometry(8, 6, 20);
+            const roofMaterial = new THREE.MeshStandardMaterial({ color: 0x380701 });
+            const roofMesh = new THREE.Mesh(roofGeometry, roofMaterial);
+            roofMesh.position.y = (height / 2 + 2);// 15
+            addUserData(roofMesh, force, soldiers, gold, type, strength, friend, people);
+            castleGroup.add(roofMesh);
+
+            // Türme erstellen
+            const towerGeometry = new THREE.CylinderGeometry(5, 5, height, 32);
+            const towerMaterial = meaterial;
+            const towerMesh1 = new THREE.Mesh(towerGeometry, towerMaterial);
+            towerMesh1.position.set(-15, 0, -15);
+            towerMesh1.castShadow = true;
+            towerMesh1.receiveShadow = true;
+            addUserData(towerMesh1, force, soldiers, gold, type, strength, friend, people);
+            castleGroup.add(towerMesh1);
+
+            const towerMesh2 = new THREE.Mesh(towerGeometry, towerMaterial);
+            towerMesh2.position.set(-15, 0, 15);
+            towerMesh2.castShadow = true;
+            towerMesh2.receiveShadow = true;
+            addUserData(towerMesh2, force, soldiers, gold, type, strength, friend, people);
+            castleGroup.add(towerMesh2);
+
+            const towerMesh3 = new THREE.Mesh(towerGeometry, towerMaterial);
+            towerMesh3.position.set(15, 0, -15);
+            towerMesh3.castShadow = true;
+            towerMesh3.receiveShadow = true;
+            addUserData(towerMesh3, force, soldiers, gold, type, strength, friend, people);
+            castleGroup.add(towerMesh3);
+
+            const towerMesh4 = new THREE.Mesh(towerGeometry, towerMaterial);
+            towerMesh4.position.set(15, 0, 15);
+            towerMesh4.castShadow = true;
+            towerMesh4.receiveShadow = true;
+            addUserData(towerMesh4, force, soldiers, gold, type, strength, friend, people);
+            castleGroup.add(towerMesh4);
+
+            const wall1  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
+            wall1.position.set(-15, 0, 0);
+            wall1.castShadow = true;
+            wall1.receiveShadow = true;
+            wall1.rotation.y = Math.PI / 2;
+            addUserData(wall1, force, soldiers, gold, type, strength, friend, people);
+            castleGroup.add(wall1);
+
+            const wall2  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
+            wall2.position.set(15, 0, 0);
+            wall2.castShadow = true;
+            wall2.receiveShadow = true;
+            wall2.rotation.y = Math.PI / 2;
+            addUserData(wall2, force, soldiers, gold, type, strength, friend, people);
+            castleGroup.add(wall2);
+
+            const wall3  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
+            wall3.position.set(0, 0, 15);
+            wall3.castShadow = true;
+            wall3.receiveShadow = true;
+            addUserData(wall3, force, soldiers, gold, type, strength, friend, people);
+            castleGroup.add(wall3);
+
+            const wall4  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
+            wall4.position.set(0, 0, -15);
+            wall4.castShadow = true;
+            wall4.receiveShadow = true;
+            addUserData(wall4, force, soldiers, gold, type, strength, friend, people);
+            castleGroup.add(wall4);
+
+            addUserData(castleGroup, force, soldiers, gold, type, strength, friend, people);
+
+            allcastles.push(castleGroup);
+
+            return castleGroup;
+        }
+
+        function addUserData(object, force, soldiers, gold, type, strength, friend, people) {
+            object.userData = { force, soldiers, gold, type, strength, friend, people };
+            object.userData.horses = 0;
+            object.userData.cows = 0;
+            object.userData.goats = 0;
+            object.userData.chickens = 0;
+            object.userData.ricefields = 0;
+            object.userData.cornfields = 0;
+            object.userData.workers = 0;
+            object.userData.weapons = 0;
+            object.userData.popularity = 0;
+            object.userData.meat = 0;
+            object.userData.eggs = 0;
+            object.userData.milk = 0;
+            object.userData.rice = 0;
+            object.userData.corn = 0;
+            object.userData.level = 1;
+        }
+
+        function loadCastlesFromJSON() {
+            castleData.forEach((data, index) => {
+                const material = getMaterial(data.strength);
+                const castle = createCastlesmall(material, data.friend, data.soldiers, data.population, data.gold, data.force, data.strength, data.type, (data.level * 20));
+
+                castle.position.set(data.position.x, 7, data.position.z);
+                castle.castShadow = true;
+                castle.receiveShadow = true;
+
+                // Benutzerdaten hinzufügen
+                castle.children.forEach(child => {
+                    child.userData = { ...data };
+                    addedcastle.push(child);
+                });
+
+                scene.add(castle);
+            });
+        }
+
+        function onTouchStart(event) {
+            if (event.touches.length === 1) {
+                touchX = event.touches[0].clientX;
+                touchY = event.touches[0].clientY;
+                isTouching = true;
+
+                checkIntersects(event); // Überprüft beim Touchstart, ob ein Schloss ausgewählt ist
+            }
+        }
+
+        let editelement = document.getElementById('edit');
+        let edit = false;
+        editelement.addEventListener('click', () => {
+            if (edit == false){
+                edit = true;
+                editelement.innerHTML = "Edit: ON";
+            }else {
+                edit = false;
+                editelement.innerHTML = "Edit: OFF";
+            }
+        });
+
+        function onTouchMove(event) {
+            if (isTouching && event.touches.length === 1) {
+                const deltaX = event.touches[0].clientX - touchX;
+                const deltaY = event.touches[0].clientY - touchY;
+
+                if (playerCastle && edit == true){
+                    const castle = playerCastle;
+                    castle.position.x += deltaX * 0.5;
+                    castle.position.z += deltaY * 0.5;
+                    // castle children userdata position = castle position
+                    castle.children.forEach(child => {
+                        child.userData.position = {
+                            x: castle.position.x,
+                            z: castle.position.z
+                        };
+                    });
+                    castle.userData.position = {
+                        x: castle.position.x,
+                        z: castle.position.z
+                    }
+                }else {
+                    camera.position.x -= deltaX * 0.5;
+                    camera.position.z -= deltaY * 0.5;
+                    //camera.lookAt(ground.position);
+                    // expand floor
+                    ground.position.x -= deltaX * 0.5;
+                    ground.position.z -= deltaY * 0.5;
+                }
+
+                touchX = event.touches[0].clientX;
+                touchY = event.touches[0].clientY;
+            }
+        }
+
+        function onTouchEnd() {
+            isTouching = false;
+        }
+
+
+        function onMouseDown(event) {
+            if (event.button === 0) {
+                isMouseDown = true;
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            }
+        }
+
+        function onMouseMove(event) {
+            if (isMouseDown) {
+                const deltaX = event.clientX - mouseX;
+                const deltaY = event.clientY - mouseY;
+
+                if (playerCastle && edit == true){
+                    const castle = playerCastle;
+                    castle.position.x += deltaX * 0.5;
+                    castle.position.z += deltaY * 0.5;
+                    // castle children userdata position = castle position
+                    castle.children.forEach(child => {
+                        child.userData.position = {
+                            x: castle.position.x,
+                            z: castle.position.z
+                        };
+                    });
+                    castle.userData.position = {
+                        x: castle.position.x,
+                        z: castle.position.z
+                    }
+                }else {
+                    camera.position.x -= deltaX * 0.5;
+                    camera.position.z -= deltaY * 0.5;
+                    //camera.lookAt(ground.position);
+                    ground.position.x -= deltaX * 0.5;
+                    ground.position.z -= deltaY * 0.5;
+                }
+
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            }
+        }
+
+        function onMouseUp() {
+            isMouseDown = false;
+        }
+        
+        function checkIntersects(event) {
+            mouse.x = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.touches[0].clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            const intersects = raycaster.intersectObjects(addedcastle);
+
+            if (intersects.length > 0) {
+                selectedObject = intersects[0].object;
+                dataChanged = true;
+                updateUserDataDisplay(selectedObject.userData);
+            }
+        }
+
+        let playerName = document.getElementById('username').innerHTML;
+
+        let tradenow = true;
+
+        function Trade(){
+            if (tradenow == true) {
+                tradenow = false;
+                let cns = document.getElementById("computer-number-select").value;
+                let ts = document.getElementById("take-select").value;
+                let pns = document.getElementById("player-number-select").value;
+                let gs = document.getElementById("give-select").value;
+                // check if int cns has under 10 difrence to pns int
+                if (ts == "soldiers" && gs == "eggs"){
+                    showalert('Your offer was declined');
+                }else if (ts == "soldiers" && gs == "rice"){
+                    showalert('Your offer was declined');
+                }else if (ts == "soldiers" && gs == "corn"){
+                    showalert('Your offer was declined');
+                }else if (ts == "weapons" && gs == "eggs"){
+                    showalert('Your offer was declined');
+                }else if (ts == "weapons" && gs == "rice"){
+                    showalert('Your offer was declined');
+                }else if (ts == "weapons" && gs == "corn"){
+                    showalert('Your offer was declined');
+                }else if (ts == "weapons" && gs == "meat"){
+                    showalert('Your offer was declined');
+                }else {
+                    if (parseInt(cns) - parseInt(pns) < 10 && ts != gs){
+                        if (selectedObject && playerCastle){
+                            const selectedCastle = selectedObject.parent;
+                            selectedCastle.children.forEach(child => {
+                                if (child.userData.king != playerName){
+                                    // find ts in selectedObject userData
+                                    if (child.userData[ts] >= parseInt(cns) && playerCastle.children[1].userData[gs] >= parseInt(pns)){
+                                        child.userData[ts] -= parseInt(cns);
+                                        if (ts == "soldiers"){
+                                            child.userData.population -= parseInt(cns);
+                                            selectedCastle.userData.population -= parseInt(cns);
+                                        }
+                                        child.userData[gs] += parseInt(pns);
+                                        selectedCastle.userData[ts] -= parseInt(cns);
+                                        selectedCastle.userData[gs] += parseInt(pns);
+                                        if (gs == "soldiers"){
+                                            child.userData.population += parseInt(pns);
+                                            selectedCastle.userData.population += parseInt(pns);
+                                        }
+                                        updateUserDataDisplay(child.userData);
+                                    }else {
+                                        console.log('not enough ' + ts + ' in ' + child.userData.king);
+                                        if (child.userData[ts] < parseInt(cns)){
+                                            showalert(child.userData.king + ' does not have enough ' + ts);
+                                        }else {
+                                            showalert('we think you do not have enough ' + gs);
+                                        }
+                                    }
+                                }else {
+                                    console.log('wrong king');
+                                    showalert('you can not trade with yourself');
+                                }
+                            });
+                            playerCastle.children.forEach(child => {
+                                if (child.userData[gs] >= parseInt(pns) && selectedCastle.children[1].userData[ts] >= parseInt(cns)){
+                                    child.userData[gs] -= parseInt(pns);
+                                    child.userData[ts] += parseInt(cns);
+                                    playerCastle.userData[gs] -= parseInt(pns);
+                                    playerCastle.userData[ts] += parseInt(cns);
+                                    if (gs == "soldiers"){
+                                        child.userData.population -= parseInt(pns);
+                                        playerCastle.userData.population -= parseInt(pns);
+                                    }
+                                    if (ts == "soldiers"){
+                                        child.userData.population += parseInt(cns);
+                                        playerCastle.userData.population += parseInt(cns);
+                                    }
+                                    updateUserDataDisplay(child.userData);
+                                }else {
+                                    console.log('not enough ' + gs + ' in ' + child.userData.king);
+                                    if (child.userData[gs] < parseInt(pns)){
+                                        showalert('we think you do not have enough ' + gs);
+                                    }/*else {
+                                        showalert(selectedObject.userData.king + ' does not have enough ' + ts);
+                                    }*/
+                                }
+                            });
+                        }else {
+                            console.log('no castle selected');
+                            if (playerCastle){
+                                showalert('no castle selected');
+                            }else {
+                                showalert('your castle was not found');
+                            }
+                        }
+                    }else {
+                        console.log(cns + ' - ' + pns + ' is more than 10');
+                        showalert('Your offer was declined');
+                    }
+                }
+
+            }
+            tradenow = true;
+        }
+        let shopnow = true;
+        function shop() {
+            let ssi = document.getElementById("select-shopping-item").value;
+            let ssn = document.getElementById("select-item-number").value;
+            let siv = document.getElementById("select-item-value-input").value;
+            if (selectedObject && playerCastle && shopnow == true) {
+                shopnow = false;
+                const selectedCastle = selectedObject.parent;
+                if (ssi == "soldiers" && (selectedCastle.children[0].userData.soldiers - parseInt(ssn)) <= 100) {
+                    showalert('Your offer was declined');
+                }else if (ssi == "horses" && (selectedCastle.children[0].userData.horses - parseInt(ssn)) <= 20) {
+                    showalert('Your offer was declined');
+                }else if (ssi == "ricefields" && (parseInt(siv) * parseInt(ssn)) <= (parseInt(ssn) * 10)) {
+                    showalert('Your offer was declined');
+                }else if (ssi == "cornfields" && (parseInt(siv) * parseInt(ssn)) <= (parseInt(ssn) * 10)) {
+                    showalert('Your offer was declined');
+                }else {
+                    if (parseInt(siv) == siv){
+                        if (selectedCastle.children[0].userData.king != playerName && playerCastle.children[0].userData.gold >= parseInt(siv) && parseInt(ssn) <= parseInt(siv)){
+                            if (selectedCastle.children[0].userData[ssi] >= parseInt(ssn)){
+                                selectedCastle.userData[ssi] -= parseInt(ssn);
+                                selectedCastle.userData.gold += parseInt(siv);
+                                selectedCastle.children.forEach(child => {
+                                    child.userData[ssi] -= parseInt(ssn);
+                                    child.userData.gold += parseInt(siv);
+                                    if (ssi == "soldiers"){
+                                        child.userData.population -= parseInt(ssn);
+                                    }
+                                });
+                                if (ssi == "soldiers"){
+                                    selectedCastle.userData.population -= parseInt(ssn);
+                                }
+                                updateUserDataDisplay(selectedCastle.userData);
+                                playerCastle.userData[ssi] += parseInt(ssn);
+                                playerCastle.userData.gold -= parseInt(siv);
+                                playerCastle.children.forEach(playercastlechild => {
+                                    playercastlechild.userData.gold -= parseInt(siv);
+                                    playercastlechild.userData[ssi] += parseInt(ssn);
+                                    if (ssi == "soldiers"){
+                                        playercastlechild.userData.population += parseInt(ssn);
+                                    }
+                                });
+                                if (ssi == "soldiers"){
+                                    playerCastle.userData.population += parseInt(ssn);
+                                }
+                                updateUserDataDisplay(playerCastle.userData);
+                            }else {
+                                console.log(selectedCastle.children[0].userData.king + ' does not have enough ' + ssi);
+                                if (selectedCastle.children[0].userData[ssi] < parseInt(ssn)){
+                                    showalert(selectedCastle.children[0].userData.king + ' does not have enough ' + ssi);
+                                }
+                            }
+                        }else {
+                            if (selectedCastle.children[0].userData.king == playerName){
+                                console.log('wrong king');
+                                showalert('you can not buy from yourself');
+                            }else if (playerCastle.children[0].userData.gold < parseInt(siv)){
+                                console.log('not enough gold');
+                                showalert('you do not have enough gold');
+                            }else if (parseInt(ssn) > parseInt(siv)){
+                                showalert('Your offer was declined');
+                            }
+                        }
+                    }else {
+                        showalert('you have to enter a number in the input field');
+                    }
+                }
+            }
+            shopnow = true;
+        }
+
+        function fight() {
+            let sns = document.getElementById("strategy-name-selector").value;
+            let snsf = document.getElementById("soldier-number-selector-fb").value;
+            if (parseInt(snsf) != snsf){
+                showalert('please enter a number in the input field and try again');
+            }else if (sns == "attack"){
+                if (selectedObject && playerCastle){
+                    const selectedCastle = selectedObject.parent;
+                    if (selectedCastle.children[0].userData.king != playerName && playerCastle.children[0].userData.soldiers >= parseInt(snsf)){
+                        let soldierfightnum = document.getElementById('soldierfightnum');
+                        let fightDataDisplay = document.getElementById('fightDataDisplay');
+                        fightDataDisplay.style.display = "flex";
+                        soldierfightnum.textContent = parseInt(snsf);
+                        // remove 1 soldier from the computer castle every second if the computer castle has more than 1 soldier
+                        let howmanytimes = parseInt(snsf);
+                        takeasoldier();
+                        function takeasoldier(){
+                            if (selectedCastle.children[1].userData.soldiers > 1 && playerCastle.children[1].userData.soldiers > 0){
+                                selectedCastle.children.forEach(child => {
+                                    child.userData.soldiers -= 2;
+                                    child.userData.population -= 2;
+                                    updateUserDataDisplay(child.userData);
+                                });
+                                selectedCastle.userData.soldiers -= 2;
+                                selectedCastle.userData.population -= 2;
+                                
+                                playerCastle.children.forEach(child => {
+                                    child.userData.soldiers -= 1;
+                                    child.userData.population -= 1;
+                                });
+                                playerCastle.userData.soldiers -= 1;
+                                playerCastle.userData.population -= 1;
+                                soldierfightnum.textContent = (parseInt(soldierfightnum.textContent) - 1);
+                                howmanytimes -= 1;
+                                if (howmanytimes >= 0){
+                                    setTimeout(takeasoldier, 100);
+                                }else {
+                                    fightDataDisplay.style.display = "none";
+                                    showalert('attack succesful');
+                                }
+                            }else {
+                                if (selectedCastle.children[1].userData.soldiers < 2){
+                                    // remove the castle from allcastles list
+                                    playerCastle.children.forEach(child => {
+                                        child.userData.gold += selectedCastle.children[1].userData.gold;
+                                    });
+                                    playerCastle.userData.gold += selectedCastle.children[1].userData.gold;
+                                    allcastles.forEach((castle, index) => {
+                                        if (castle === selectedCastle) {
+                                            allcastles.splice(index, 1);
+                                        }
+                                    });
+                                    selectedCastle.remove();
+                                    scene.remove(selectedCastle);
+                                    fightDataDisplay.style.display = "none";
+                                    showalert('you won!');
+                                }else if (playerCastle.children[1].userData.soldiers < 1){
+                                    playerCastle.children.forEach(castle => {
+                                        castle.userData.position = {
+                                            x: 0,
+                                            z: 0
+                                        }
+                                        playerCastle.position.x = castle.userData.position.x;
+                                        playerCastle.position.z = castle.userData.position.z;
+                                        castle.userData.force = 10;
+                                        castle.userData.soldiers = 10;
+                                        castle.userData.gold = 50;
+                                        castle.userData.size = 1;
+                                        castle.userData.type = 'castle';
+                                        castle.userData.strength = 15;
+                                        castle.userData.friend = true;
+                                        castle.userData.population = 30;
+                                        castle.userData.queen = 'nobody';
+                                        castle.userData.king = document.getElementById('username').innerHTML;
+                                        castle.userData.horses = 0;
+                                        castle.userData.cows = 2;
+                                        castle.userData.goats = 2;
+                                        castle.userData.chickens = 2;
+                                        castle.userData.ricefields = 0;
+                                        castle.userData.cornfields = 0;
+                                        castle.userData.workers = 10;
+                                        castle.userData.weapons = 10;
+                                        castle.userData.popularity = 0;
+                                        castle.userData.meat = 0;
+                                        castle.userData.eggs = 0;
+                                        castle.userData.milk = 0;
+                                        castle.userData.rice = 0;
+                                        castle.userData.corn = 0;
+                                        castle.userData.level = 1;
+                                        updateUserDataDisplay(castle.userData);
+                                        fightDataDisplay.style.display = "none";
+                                        showalert('you lost the attack! the game restarted');
+                                    });
+                                    playerCastle.userData = playerCastle.children[0].userData;
+                                }
+                                
+                            }
+                        }
+                        
+                    }else {
+                        if (selectedCastle.children[0].userData.king == playerName){
+                            console.log('wrong king');
+                            showalert('you can not attack yourself');
+                        }else if (playerCastle.children[0].userData.soldiers < parseInt(snsf)){
+                            showalert('you do not have enough soldiers');
+                        }
+                    }
+                }else {
+                    console.log('no castle selected');
+                    if (playerCastle){
+                        showalert('no castle selected');
+                    }else {
+                        showalert('your castle was not found');
+                    }
+                }
+            }else if (sns == "invade"){
+                if (selectedObject && playerCastle){
+                    const selectedCastle = selectedObject.parent;
+                    if (selectedCastle.children[0].userData.king != playerName && playerCastle.children[0].userData.soldiers >= parseInt(snsf)){
+                        let soldierfightnum = document.getElementById('soldierfightnum');
+                        let fightDataDisplay = document.getElementById('fightDataDisplay');
+                        fightDataDisplay.style.display = "flex";
+                        soldierfightnum.textContent = parseInt(snsf);
+                        // remove 1 soldier from the computer castle every second if the computer castle has more than 1 soldier
+                        let howmanytimes = parseInt(snsf);
+                        let strengthv = selectedCastle.children[1].userData.strength;
+                        takeasoldier();
+                        function takeasoldier(){
+                            if (strengthv > 0.5 && playerCastle.children[1].userData.soldiers > 0){
+                                selectedCastle.children.forEach(child => {
+                                    strengthv -= 0.5;
+                                });
+
+                                playerCastle.children.forEach(child => {
+                                    child.userData.soldiers -= 1;
+                                    child.userData.population -= 1;
+                                });
+                                playerCastle.userData.soldiers -= 1;
+                                playerCastle.userData.population -= 1;
+                                soldierfightnum.textContent = (parseInt(soldierfightnum.textContent) - 1);
+                                howmanytimes -= 1;
+                                if (howmanytimes >= 0){
+                                    setTimeout(takeasoldier, 100);
+                                }else {
+                                    fightDataDisplay.style.display = "none";
+                                    showalert('invasion succesful');
+                                }
+                            }else {
+                                if (strengthv < 0.5){
+                                    // remove the castle from allcastles list
+                                    playerCastle.children.forEach(child => {
+                                        child.userData.gold += selectedCastle.children[1].userData.gold;
+                                        playerCastle.userData.gold += selectedCastle.children[1].userData.gold;
+                                    });
+                                    allcastles.forEach((castle, index) => {
+                                        if (castle === selectedCastle) {
+                                            allcastles.splice(index, 1);
+                                        }
+                                    });
+                                    selectedCastle.remove();
+                                    scene.remove(selectedCastle);
+                                    fightDataDisplay.style.display = "none";
+                                    showalert('you won!');
+                                }else if (playerCastle.children[1].userData.soldiers < 1){
+                                    playerCastle.children.forEach(castle => {
+                                        castle.userData.position = {
+                                            x: 0,
+                                            z: 0
+                                        }
+                                        playerCastle.position.x = castle.userData.position.x;
+                                        playerCastle.position.z = castle.userData.position.z;
+                                        castle.userData.force = 10;
+                                        castle.userData.soldiers = 10;
+                                        castle.userData.gold = 50;
+                                        castle.userData.size = 1;
+                                        castle.userData.type = 'castle';
+                                        castle.userData.strength = 15;
+                                        castle.userData.friend = true;
+                                        castle.userData.population = 30;
+                                        castle.userData.queen = 'nobody';
+                                        castle.userData.king = document.getElementById('username').innerHTML;
+                                        castle.userData.horses = 0;
+                                        castle.userData.cows = 2;
+                                        castle.userData.goats = 2;
+                                        castle.userData.chickens = 2;
+                                        castle.userData.ricefields = 0;
+                                        castle.userData.cornfields = 0;
+                                        castle.userData.workers = 10;
+                                        castle.userData.weapons = 10;
+                                        castle.userData.popularity = 0;
+                                        castle.userData.meat = 0;
+                                        castle.userData.eggs = 0;
+                                        castle.userData.milk = 0;
+                                        castle.userData.rice = 0;
+                                        castle.userData.corn = 0;
+                                        castle.userData.level = 1;
+                                        updateUserDataDisplay(castle.userData);
+                                        fightDataDisplay.style.display = "none";
+                                        showalert('you lost the invasion! the game restarted');
+                                    });
+                                    playerCastle.userData = playerCastle.children[0].userData;
+                                }
+
+                            }
+                        }
+
+                    }else {
+                        if (selectedCastle.children[0].userData.king == playerName){
+                            console.log('wrong king');
+                            showalert('you can not invade yourself');
+                        }else if (playerCastle.children[0].userData.soldiers < parseInt(snsf)){
+                            showalert('you do not have enough soldiers');
+                        }
+                    }
+                }else {
+                    console.log('no castle selected');
+                    if (playerCastle){
+                        showalert('no castle selected');
+                    }else {
+                        showalert('your castle was not found');
+                    }
+                }
+            }else if (sns == "battle"){
+                if (selectedObject && playerCastle){
+                    const selectedCastle = selectedObject.parent;
+                    if (selectedCastle.children[0].userData.king != playerName && playerCastle.children[0].userData.soldiers >= parseInt(snsf)){
+                        let soldierfightnum = document.getElementById('soldierfightnum');
+                        let fightDataDisplay = document.getElementById('fightDataDisplay');
+                        fightDataDisplay.style.display = "flex";
+                        soldierfightnum.textContent = parseInt(snsf);
+                        // remove 1 soldier from the computer castle every second if the computer castle has more than 1 soldier
+                        let howmanytimes = parseInt(snsf);
+                        takeasoldier();
+                        function takeasoldier(){
+                            if (selectedCastle.children[1].userData.soldiers > 0 && playerCastle.children[1].userData.soldiers > 0){
+                                selectedCastle.children.forEach(child => {
+                                    child.userData.soldiers -= 1;
+                                    child.userData.population -= 1;
+                                    updateUserDataDisplay(child.userData);
+                                });
+                                selectedCastle.userData.soldiers -= 1;
+                                selectedCastle.userData.population -= 1;
+
+                                playerCastle.children.forEach(child => {
+                                    child.userData.soldiers -= 1;
+                                    child.userData.population -= 1;
+                                });
+                                playerCastle.userData.soldiers -= 1;
+                                playerCastle.userData.population -= 1;
+                                soldierfightnum.textContent = (parseInt(soldierfightnum.textContent) - 1);
+                                howmanytimes -= 1;
+                                if (howmanytimes >= 0){
+                                    setTimeout(takeasoldier, 100);
+                                }else {
+                                    fightDataDisplay.style.display = "none";
+                                    showalert('battle succesful');
+                                }
+                            }else {
+                                if (selectedCastle.children[1].userData.soldiers < 1){
+                                    // remove the castle from allcastles list
+                                    playerCastle.children.forEach(child => {
+                                        child.userData.gold += selectedCastle.children[1].userData.gold;
+                                    });
+                                    playerCastle.userData.gold += selectedCastle.children[1].userData.gold;
+                                    allcastles.forEach((castle, index) => {
+                                        if (castle === selectedCastle) {
+                                            allcastles.splice(index, 1);
+                                        }
+                                    });
+                                    selectedCastle.remove();
+                                    scene.remove(selectedCastle);
+                                    fightDataDisplay.style.display = "none";
+                                    showalert('you won!');
+                                }else if (playerCastle.children[1].userData.soldiers < 1){
+                                    playerCastle.children.forEach(castle => {
+                                        castle.userData.position = {
+                                            x: 0,
+                                            z: 0
+                                        }
+                                        playerCastle.position.x = castle.userData.position.x;
+                                        playerCastle.position.z = castle.userData.position.z;
+                                        castle.userData.force = 10;
+                                        castle.userData.soldiers = 10;
+                                        castle.userData.gold = 50;
+                                        castle.userData.size = 1;
+                                        castle.userData.type = 'castle';
+                                        castle.userData.strength = 15;
+                                        castle.userData.friend = true;
+                                        castle.userData.population = 30;
+                                        castle.userData.queen = 'nobody';
+                                        castle.userData.king = document.getElementById('username').innerHTML;
+                                        castle.userData.horses = 0;
+                                        castle.userData.cows = 2;
+                                        castle.userData.goats = 2;
+                                        castle.userData.chickens = 2;
+                                        castle.userData.ricefields = 0;
+                                        castle.userData.cornfields = 0;
+                                        castle.userData.workers = 10;
+                                        castle.userData.weapons = 10;
+                                        castle.userData.popularity = 0;
+                                        castle.userData.meat = 0;
+                                        castle.userData.eggs = 0;
+                                        castle.userData.milk = 0;
+                                        castle.userData.rice = 0;
+                                        castle.userData.corn = 0;
+                                        castle.userData.level = 1;
+                                        updateUserDataDisplay(castle.userData);
+                                        fightDataDisplay.style.display = "none";
+                                        showalert('you lost the attack! the game restarted');
+                                    });
+                                    playerCastle.userData = playerCastle.children[0].userData;
+                                }
+
+                            }
+                        }
+
+                    }else {
+                        if (selectedCastle.children[0].userData.king == playerName){
+                            console.log('wrong king');
+                            showalert('you can not attack yourself');
+                        }else if (playerCastle.children[0].userData.soldiers < parseInt(snsf)){
+                            showalert('you do not have enough soldiers');
+                        }
+                    }
+                }else {
+                    console.log('no castle selected');
+                    if (playerCastle){
+                        showalert('no castle selected');
+                    }else {
+                        showalert('your castle was not found');
+                    }
+                }
+            }
+        }
+
+        let sellnow = true;
+        function sell() {
+            let ssi = document.getElementById("select-sell-item").value;
+            let ssn = document.getElementById("sell-item-number").value;
+            let siv = document.getElementById("sell-item-value-input").value;
+            if (selectedObject && playerCastle && sellnow == true) {
+                sellnow = false;
+                const selectedCastle = selectedObject.parent;
+                if (parseInt(siv) == siv){
+                    if (selectedCastle.children[0].userData.king != playerName && selectedCastle.children[0].userData.gold >= parseInt(siv) && parseInt(ssn) >= (parseInt(siv) / 2)){
+                        if (playerCastle.children[0].userData[ssi] >= parseInt(ssn)){
+                            playerCastle.userData[ssi] -= parseInt(ssn);
+                            playerCastle.userData.gold += parseInt(siv);
+                            playerCastle.children.forEach(child => {
+                                child.userData[ssi] -= parseInt(ssn);
+                                child.userData.gold += parseInt(siv);
+                                if (ssi == "soldiers") {
+                                    child.userData.population -= parseInt(ssn);
+                                }
+                            });
+                            if (ssi == "soldiers") {
+                                playerCastle.userData.population -= parseInt(ssn);
+                            }
+                            updateUserDataDisplay(playerCastle.userData);
+                            selectedCastle.userData[ssi] += parseInt(ssn);
+                            selectedCastle.userData.gold -= parseInt(siv);
+                            selectedCastle.children.forEach(playercastlechild => {
+                                playercastlechild.userData.gold -= parseInt(siv);
+                                playercastlechild.userData[ssi] += parseInt(ssn);
+                                if (ssi == "soldiers") {
+                                    playercastlechild.userData.population += parseInt(ssn);
+                                }
+                            });
+                            if (ssi == "soldiers") {
+                                selectedCastle.userData.population += parseInt(ssn);
+                            }
+                            updateUserDataDisplay(selectedCastle.userData);
+                        }else {
+                            console.log(selectedCastle.children[0].userData.king + ' does not have enough ' + ssi);
+                            if (playerCastle.children[0].userData[ssi] < parseInt(ssn)){
+                                showalert('you do not have enough ' + ssi);
+                            }
+                        }
+                    }else {
+                        if (selectedCastle.children[0].userData.king == playerName){
+                            console.log('wrong king');
+                            showalert('you can not sell too yourself');
+                        }else if (selectedCastle.children[0].userData.gold < parseInt(siv)){
+                            console.log('not enough gold');
+                            showalert('you do not have enough gold');
+                        }else if (parseInt(ssn) <= (parseInt(siv) / 2)){
+                            showalert('Your offer was declined');
+                        }
+                    }
+                }else {
+                    showalert('you have to enter a number in the input field');
+                }
+            }
+            sellnow = true;
+        }
+        
+        function updateUserDataDisplay(userData) {
+            const userDataDisplay = document.getElementById('userDataDisplay');
+            let displayText = `<strong>${userData.king}'s castle info:</strong><br>`;
+            for (const [key, value] of Object.entries(userData)) {
+                displayText += `<strong>${key}:</strong> ${value}<br>`;
+            }
+            userDataDisplay.innerHTML = displayText;
+        }
+
+        function updateCastleResources() {
+            addedcastle.forEach(castle => {
+                if (castle.userData.ricefields > 0 && castle.userData.workers > 0) {
+                    castle.userData.rice += castle.userData.ricefields;
+                    castle.children.forEach(child => {
+                        castle.userData.rice += castle.userData.ricefields;
+                    });
+                }
+                if (castle.userData.cornfields > 0 && castle.userData.workers > 0) {
+                    castle.userData.corn += castle.userData.cornfields;
+                    castle.children.forEach(child => {
+                        castle.userData.corn += castle.userData.cornfields;
+                    });
+                }
+                if (castle.userData.cows > 0 && castle.userData.workers > 0) {
+                    castle.userData.milk += castle.userData.cows;
+                    castle.children.forEach(child => {
+                        castle.userData.milk += castle.userData.cows;
+                    });
+                }
+                if (castle.userData.chickens > 0 && castle.userData.workers > 0) {
+                    castle.userData.eggs += castle.userData.chickens;
+                    castle.children.forEach(child => {
+                        castle.userData.eggs += castle.userData.chickens;
+                    });
+                }
+                if (castle.userData.goats > 0 && castle.userData.workers > 0) {
+                    castle.userData.meat += castle.userData.goats;
+                    castle.children.forEach(child => {
+                        castle.userData.meat += castle.userData.goats;
+                    });
+                }
+                if (selectedObject){
+                    updateUserDataDisplay(selectedObject.userData);
+                }
+                // Update every 30 seconds
+            });
+        }
+
+        function updatePopulation() {
+            addedcastle.forEach(castle => {
+                if (castle.userData.rice > 1) {
+                    castle.userData.population += 5;
+                    castle.userData.rice -= 1;
+                }else if (castle.userData.corn > 1){
+                    castle.userData.population += 5;
+                    castle.userData.corn -= 1;
+                }else if (castle.userData.eggs > 5){
+                    castle.userData.population += 5;
+                    castle.userData.eggs -= 5;
+                }else if (castle.userData.meat > 5){
+                    castle.userData.population += 5;
+                    castle.userData.meat -= 5;
+                }else {
+                    /*
+                    {
+                        position: { x: -60, z: -60 }, force: 10, soldiers: 10, gold: 500, size: 1, type: 'castle',
+                        strength: 15, friend: true, population: 30, queen: 'nobody', king: 'Guest',
+                        horses: 0, cows: 2, goats: 2, chickens: 2, ricefields: 0, cornfields: 0,
+                        workers: 10, weapons: 10, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 1
+                    }
+                    */
+                    if ((castle.userData.population - castle.userData.workers - castle.userData.soldiers) > 2){
+                        castle.userData.population -= 2;
+                    }else if ((castle.userData.population - castle.userData.workers) > 2){
+                        castle.userData.soldiers -= 2;
+                        castle.userData.population -= 2;
+                    }else if ((castle.userData.population - castle.userData.soldiers) > 2){
+                        castle.userData.workers -= 2;
+                        castle.userData.population -= 2;
+                    }
+                    if (castle.userData.population <= 0){
+                        castle.userData.position = {
+                            x: 0,
+                            z: 0
+                        }
+                        playerCastle.position.x = castle.userData.position.x;
+                        playerCastle.position.z = castle.userData.position.z;
+                        castle.userData.force = 10;
+                        castle.userData.soldiers = 10;
+                        castle.userData.gold = 50;
+                        castle.userData.size = 1;
+                        castle.userData.type = 'castle';
+                        castle.userData.strength = 15;
+                        castle.userData.friend = true;
+                        castle.userData.population = 30;
+                        castle.userData.queen = 'nobody';
+                        castle.userData.king = document.getElementById('username').innerHTML;
+                        castle.userData.horses = 0;
+                        castle.userData.cows = 2;
+                        castle.userData.goats = 2;
+                        castle.userData.chickens = 2;
+                        castle.userData.ricefields = 0;
+                        castle.userData.cornfields = 0;
+                        castle.userData.workers = 10;
+                        castle.userData.weapons = 10;
+                        castle.userData.popularity = 0;
+                        castle.userData.meat = 0;
+                        castle.userData.eggs = 0;
+                        castle.userData.milk = 0;
+                        castle.userData.rice = 0;
+                        castle.userData.corn = 0;
+                        castle.userData.level = 1;
+                        updateUserDataDisplay(castle.userData);
+                        showalert('you lost the attack! the game restarted');
+                    }
+                }
+                if (selectedObject){
+                    updateUserDataDisplay(selectedObject.userData);
+                }
+                // Update every 30 seconds
+            });
+        }
+
+        function updateCastleStrength() {
+            addedcastle.forEach(castle => {
+                castle.userData.strength = (castle.userData.soldiers / 2) + castle.userData.weapons;
+                kingname = castle.userData.king;
+                username = document.getElementById('username');
+
+                // update castle material
+                const material = getMaterial(castle.userData.strength);
+                castle.children.forEach(child => {
+                    child.material = material;
+                });
+                if (kingname == username.innerHTML){
+                    let populationelement = document.getElementById('population');
+                    let workerselement = document.getElementById('workers');
+                    let soldierelement = document.getElementById('soldiers');
+                    let goldelement = document.getElementById('gold');
+                    
+                    goldelement.innerHTML = castle.userData.gold;
+                    workerselement.innerHTML = castle.userData.workers;
+                    soldierelement.innerHTML = castle.userData.soldiers;
+                    populationelement.innerHTML = castle.userData.population;
+                    // playerCastle = castle parent
+                    playerCastle = castle.parent;
+                }
+            });
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', onWindowResize, false);
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
