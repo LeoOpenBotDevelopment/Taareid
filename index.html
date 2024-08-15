@@ -29,7 +29,7 @@
             transition: 1s;
             /* make it scrollable */
             overflow-y: auto;
-            max-height: calc(100vh - 200px);
+            max-height: 80vh;
         }
         #informationbar{
             font-weight: bold;
@@ -436,7 +436,7 @@
             <!--<option value="population">people</option>-->
         </select>
         <label for="select-item-value-input">for</label>
-        
+
         <!-- number input-->
         <input type="text" id="select-item-value-input">
         <button onclick="shop()">get</button>
@@ -638,6 +638,18 @@
                 tradediv.style.display = 'none';
             }
         });*/
+        function checkCollision(player, walls) {
+            const playerBox = new THREE.Box3().setFromObject(player);
+
+            for (const wall of walls) {
+                const wallBox = new THREE.Box3().setFromObject(wall);
+
+                if (playerBox.intersectsBox(wallBox)) {
+                    return true;
+                }
+            }
+            return false;
+        }
         let createjobbtn = document.getElementById('createjobbtn');
         createjobbtn.addEventListener('click', () => {
             let selldiv = document.querySelector('.selldiv');
@@ -939,7 +951,9 @@
 
         let allcastles = [];
 
-        function createCastlesmall(meaterial, friend, soldiers, people, gold, force, strength, type, height) {
+        let castlewalls = [];
+
+        function createCastlesmall(meaterial, friend, soldiers, people, gold, force, strength, type, height, king) {
             const castleGroup = new THREE.Group();
 
             // Zentrale Struktur des Schlosses
@@ -948,6 +962,9 @@
             const baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
             baseMesh.position.y = 0;
             castleGroup.add(baseMesh);
+            if (king != playerName){
+                castlewalls.push(baseMesh);
+            }
 
             // Rundes, spitzes Dach
             const roofGeometry = new THREE.ConeGeometry(8, 6, 20);
@@ -956,6 +973,9 @@
             roofMesh.position.y = (height / 2 + 2);// 15
             addUserData(roofMesh, force, soldiers, gold, type, strength, friend, people);
             castleGroup.add(roofMesh);
+            if (king != playerName){
+              castlewalls.push(roofMesh);
+            }
 
             // Türme erstellen
             const towerGeometry = new THREE.CylinderGeometry(5, 5, height, 32);
@@ -966,6 +986,9 @@
             towerMesh1.receiveShadow = true;
             addUserData(towerMesh1, force, soldiers, gold, type, strength, friend, people);
             castleGroup.add(towerMesh1);
+            if (king != playerName){
+              castlewalls.push(towerMesh1);
+            }
 
             const towerMesh2 = new THREE.Mesh(towerGeometry, towerMaterial);
             towerMesh2.position.set(-15, 0, 15);
@@ -973,6 +996,9 @@
             towerMesh2.receiveShadow = true;
             addUserData(towerMesh2, force, soldiers, gold, type, strength, friend, people);
             castleGroup.add(towerMesh2);
+            if (king != playerName){
+              castlewalls.push(towerMesh2);
+            }
 
             const towerMesh3 = new THREE.Mesh(towerGeometry, towerMaterial);
             towerMesh3.position.set(15, 0, -15);
@@ -980,6 +1006,9 @@
             towerMesh3.receiveShadow = true;
             addUserData(towerMesh3, force, soldiers, gold, type, strength, friend, people);
             castleGroup.add(towerMesh3);
+            if (king != playerName){
+              castlewalls.push(towerMesh3);
+            }
 
             const towerMesh4 = new THREE.Mesh(towerGeometry, towerMaterial);
             towerMesh4.position.set(15, 0, 15);
@@ -987,6 +1016,9 @@
             towerMesh4.receiveShadow = true;
             addUserData(towerMesh4, force, soldiers, gold, type, strength, friend, people);
             castleGroup.add(towerMesh4);
+            if (king != playerName){
+              castlewalls.push(towerMesh4);
+            }
 
             const wall1  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
             wall1.position.set(-15, 0, 0);
@@ -995,6 +1027,9 @@
             wall1.rotation.y = Math.PI / 2;
             addUserData(wall1, force, soldiers, gold, type, strength, friend, people);
             castleGroup.add(wall1);
+            if (king != playerName){
+              castlewalls.push(wall1);
+            }
 
             const wall2  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
             wall2.position.set(15, 0, 0);
@@ -1003,6 +1038,9 @@
             wall2.rotation.y = Math.PI / 2;
             addUserData(wall2, force, soldiers, gold, type, strength, friend, people);
             castleGroup.add(wall2);
+            if (king != playerName){
+              castlewalls.push(wall2);
+            }
 
             const wall3  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
             wall3.position.set(0, 0, 15);
@@ -1010,6 +1048,9 @@
             wall3.receiveShadow = true;
             addUserData(wall3, force, soldiers, gold, type, strength, friend, people);
             castleGroup.add(wall3);
+            if (king != playerName){
+              castlewalls.push(wall3);
+            }
 
             const wall4  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
             wall4.position.set(0, 0, -15);
@@ -1017,7 +1058,10 @@
             wall4.receiveShadow = true;
             addUserData(wall4, force, soldiers, gold, type, strength, friend, people);
             castleGroup.add(wall4);
-
+            if (king != playerName){
+              castlewalls.push(wall4);
+            }
+            
             addUserData(castleGroup, force, soldiers, gold, type, strength, friend, people);
 
             allcastles.push(castleGroup);
@@ -1047,7 +1091,7 @@
         function loadCastlesFromJSON() {
             castleData.forEach((data, index) => {
                 const material = getMaterial(data.strength);
-                const castle = createCastlesmall(material, data.friend, data.soldiers, data.population, data.gold, data.force, data.strength, data.type, (data.level * 20));
+                const castle = createCastlesmall(material, data.friend, data.soldiers, data.population, data.gold, data.force, data.strength, data.type, (data.level * 20), data.king);
 
                 castle.position.set(data.position.x, 7, data.position.z);
                 castle.castShadow = true;
@@ -1095,6 +1139,10 @@
                     castle.position.x += deltaX * 0.5;
                     castle.position.z += deltaY * 0.5;
                     // castle children userdata position = castle position
+                    if (checkCollision(castle, castlewalls)){
+                        castle.position.x -= deltaX * 0.5;
+                        castle.position.z -= deltaY * 0.5;
+                    }
                     castle.children.forEach(child => {
                         child.userData.position = {
                             x: castle.position.x,
@@ -1142,6 +1190,10 @@
                     castle.position.x += deltaX * 0.5;
                     castle.position.z += deltaY * 0.5;
                     // castle children userdata position = castle position
+                    if (checkCollision(castle, castlewalls)){
+                        castle.position.x -= deltaX * 0.5;
+                        castle.position.z -= deltaY * 0.5;
+                    }
                     castle.children.forEach(child => {
                         child.userData.position = {
                             x: castle.position.x,
@@ -1168,7 +1220,7 @@
         function onMouseUp() {
             isMouseDown = false;
         }
-        
+
         function checkIntersects(event) {
             mouse.x = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.touches[0].clientY / window.innerHeight) * 2 + 1;
@@ -1381,7 +1433,7 @@
                                 });
                                 selectedCastle.userData.soldiers -= 2;
                                 selectedCastle.userData.population -= 2;
-                                
+
                                 playerCastle.children.forEach(child => {
                                     child.userData.soldiers -= 1;
                                     child.userData.population -= 1;
@@ -1451,10 +1503,10 @@
                                     });
                                     playerCastle.userData = playerCastle.children[0].userData;
                                 }
-                                
+
                             }
                         }
-                        
+
                     }else {
                         if (selectedCastle.children[0].userData.king == playerName){
                             console.log('wrong king');
@@ -1751,7 +1803,7 @@
             }
             sellnow = true;
         }
-        
+
         function updateUserDataDisplay(userData) {
             const userDataDisplay = document.getElementById('userDataDisplay');
             let displayText = `<strong>${userData.king}'s castle info:</strong><br>`;
@@ -1891,7 +1943,7 @@
                     let workerselement = document.getElementById('workers');
                     let soldierelement = document.getElementById('soldiers');
                     let goldelement = document.getElementById('gold');
-                    
+
                     goldelement.innerHTML = castle.userData.gold;
                     workerselement.innerHTML = castle.userData.workers;
                     soldierelement.innerHTML = castle.userData.soldiers;
