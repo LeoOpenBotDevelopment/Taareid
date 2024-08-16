@@ -525,6 +525,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
+        let playerName = document.getElementById('username').innerHTML;
         function showalert(AlertText){
             let alertbtn = document.getElementById('alertmessagebtn');
             let alertmessage = document.getElementById('alertmessage');
@@ -584,7 +585,7 @@
             },
             {
                 position: { x: 0, z: 0 }, force: 10, soldiers: 10, gold: 50, size: 1, type: 'castle',
-                strength: 15, friend: true, population: 30, queen: 'nobody', king: 'Guest',
+                strength: 15, friend: true, population: 30, queen: 'nobody', king: playerName,
                 horses: 0, cows: 2, goats: 2, chickens: 2, ricefields: 0, cornfields: 0,
                 workers: 10, weapons: 10, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 1
             }
@@ -861,31 +862,33 @@
             scene.add(ground);
 
             function moveCameraToTarget(duration) {
-                const targetPosition = new THREE.Vector3(0, 100, 200);
-                const startPosition = camera.position.clone();
-                const distance = targetPosition.clone().sub(startPosition);
+                if (playerCastle) {
+                    const targetPosition = new THREE.Vector3(playerCastle.position.x, 100, playerCastle.position.z + 200);
+                    const startPosition = camera.position.clone();
+                    const distance = targetPosition.clone().sub(startPosition);
 
-                let startTime = null;
+                    let startTime = null;
 
-                function animateCamera(time) {
-                    if (!startTime) startTime = time;
+                    function animateCamera(time) {
+                        if (!startTime) startTime = time;
 
-                    const elapsedTime = time - startTime;
-                    const progress = Math.min(elapsedTime / duration, 1); // Fortschritt von 0 bis 1
+                        const elapsedTime = time - startTime;
+                        const progress = Math.min(elapsedTime / duration, 1); // Fortschritt von 0 bis 1
 
-                    camera.position.x = startPosition.x + distance.x * progress;
-                    camera.position.y = startPosition.y + distance.y * progress;
-                    camera.position.z = startPosition.z + distance.z * progress;
+                        camera.position.x = startPosition.x + distance.x * progress;
+                        camera.position.y = startPosition.y + distance.y * progress;
+                        camera.position.z = startPosition.z + distance.z * progress;
 
-                    ground.position.x = startPosition.x + distance.x * progress;
-                    ground.position.z = startPosition.z + distance.z * progress;
+                        ground.position.x = startPosition.x + distance.x * progress;
+                        ground.position.z = startPosition.z + distance.z * progress;
 
-                    if (progress < 1) {
-                        requestAnimationFrame(animateCamera);
+                        if (progress < 1) {
+                            requestAnimationFrame(animateCamera);
+                        }
                     }
-                }
 
-                requestAnimationFrame(animateCamera);
+                    requestAnimationFrame(animateCamera);
+                }
             }
 
             // Lichtquellen hinzufügen
@@ -953,121 +956,494 @@
 
         let castlewalls = [];
 
-        function createCastlesmall(meaterial, friend, soldiers, people, gold, force, strength, type, height, king) {
-            const castleGroup = new THREE.Group();
-
-            // Zentrale Struktur des Schlosses
-            const baseGeometry = new THREE.CylinderGeometry(6, 6, height, 30);// 25
-            const baseMaterial = meaterial;
-            const baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
-            baseMesh.position.y = 0;
-            castleGroup.add(baseMesh);
-            if (king != playerName){
-                castlewalls.push(baseMesh);
+        let allcastleplans = [
+            {
+                castle: {
+                    walls: {
+                        wall1: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(20, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(-15, 0, 0),
+                            meshrotationy: Math.PI / 2
+                        },
+                        wall2: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(20, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(15, 0, 0),
+                            meshrotationy: Math.PI / 2
+                        },
+                        wall3: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(20, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(0, 0, 15),
+                            meshrotationy: 0
+                        },
+                        wall4: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(20, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(0, 0, -15),
+                            meshrotationy: 0
+                        }
+                    },
+                    towers: {
+                        tower1: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 30, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(-15, 0, -15),
+                        },
+                        tower2: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 30, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(-15, 0, 15),
+                        },
+                        tower3: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 30, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(15, 0, -15),
+                        },
+                        tower4: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 30, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(15, 0, 15),
+                        }
+                    },
+                    maintower: {
+                        maintower1: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(6, 6, 32, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(0, 0, 0),
+                        }
+                    },
+                    roofs: {
+                        roof1: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.ConeGeometry(8, 6, 20), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(0, (32 / 2 + 2), 0),
+                             meshrotationy: 0
+                        },
+                        roof2: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.ConeGeometry(8, 6, 20), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(15, (32 / 2 + 2), 15),
+                             meshrotationy: 0
+                        },
+                        roof3: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.ConeGeometry(8, 6, 20), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(15, (32 / 2 + 2), -15),
+                             meshrotationy: 0
+                        },
+                        roof4: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.ConeGeometry(8, 6, 20), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(-15, (32 / 2 + 2), 15),
+                             meshrotationy: 0
+                        },
+                        roof5: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.ConeGeometry(8, 6, 20), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(-15, (32 / 2 + 2), -15),
+                             meshrotationy: 0
+                        }
+                    }
+                },
+                fortress: {
+                    walls: {
+                        wall1: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(20, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(-15, 0, 0),
+                            meshrotationy: Math.PI / 2
+                        },
+                        wall2: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(20, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(15, 0, 0),
+                            meshrotationy: Math.PI / 2
+                        },
+                        wall3: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(20, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(0, 0, 15),
+                            meshrotationy: 0
+                        },
+                        wall4: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(20, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(0, 0, -15),
+                            meshrotationy: 0
+                        },
+                        wall5: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(50, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(-30, 0, 0),
+                            meshrotationy: Math.PI / 2
+                        },
+                        wall6: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(50, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(30, 0, 0),
+                            meshrotationy: Math.PI / 2
+                        },
+                        wall7: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(50, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(0, 0, 30),
+                            meshrotationy: 0
+                        },
+                        wall8: {
+                            material: new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            }),
+                            mesh: new THREE.Mesh(new THREE.BoxGeometry(50, 15, 1), new THREE.MeshStandardMaterial({
+                                map: new THREE.TextureLoader().load('Zementwall.png'),
+                                side: THREE.DoubleSide
+                            })),
+                            meshposition: new THREE.Vector3(0, 0, -30),
+                            meshrotationy: 0
+                        }
+                    },
+                    towers: {
+                        tower1: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 60, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(-15, 0, -15),
+                        },
+                        tower2: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 60, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(-15, 0, 15),
+                        },
+                        tower3: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 60, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(15, 0, -15),
+                        },
+                        tower4: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 60, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(15, 0, 15),
+                        },
+                        tower5: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 30, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(-30, 0, -30),
+                        },
+                        tower6: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 30, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(-30, 0, 30),
+                        },
+                        tower7: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 30, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(30, 0, -30),
+                        },
+                        tower8: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 30, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(30, 0, 30),
+                        }
+                    },
+                    maintower: {
+                        maintower1: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(6, 6, 100, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(0, 0, 0),
+                        }
+                    },
+                    roofs: {
+                        roof1: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('DarkRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.ConeGeometry(8, 6, 20), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('DarkRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(0, (100 / 2 + 2), 0),
+                             meshrotationy: 0
+                        },
+                        roof2: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('DarkRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.ConeGeometry(8, 6, 20), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('DarkRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(15, (60 / 2 + 2), 15),
+                             meshrotationy: 0
+                        },
+                        roof3: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('DarkRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.ConeGeometry(8, 6, 20), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('DarkRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(15, (60 / 2 + 2), -15),
+                             meshrotationy: 0
+                        },
+                        roof4: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('DarkRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.ConeGeometry(8, 6, 20), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('DarkRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(-15, (60 / 2 + 2), 15),
+                             meshrotationy: 0
+                        },
+                        roof5: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('DarkRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.ConeGeometry(8, 6, 20), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('DarkRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(-15, (60 / 2 + 2), -15),
+                             meshrotationy: 0
+                        }
+                    }
+                },
+                tower: {
+                    walls: {
+                        
+                    },
+                    towers: {
+                        
+                    },
+                    maintower: {
+                        maintower1: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(8, 6, 6, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(0, 18, 0),
+                        },
+                        maintower2: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 27, 32), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('Zementwall.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(0, 2, 0),
+                        }
+                    },
+                    roofs: {
+                        roof1: {
+                            material: new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             }),
+                             mesh: new THREE.Mesh(new THREE.ConeGeometry(10, 6, 20), new THREE.MeshStandardMaterial({
+                                 map: new THREE.TextureLoader().load('LightRoofTexture.png'),
+                                 side: THREE.DoubleSide
+                             })),
+                             meshposition: new THREE.Vector3(0, (43 / 2 + 2), 0),
+                             meshrotationy: 0
+                        },
+                    }
+                }
             }
-
-            // Rundes, spitzes Dach
-            const roofGeometry = new THREE.ConeGeometry(8, 6, 20);
-            const roofMaterial = new THREE.MeshStandardMaterial({ color: 0x380701 });
-            const roofMesh = new THREE.Mesh(roofGeometry, roofMaterial);
-            roofMesh.position.y = (height / 2 + 2);// 15
-            addUserData(roofMesh, force, soldiers, gold, type, strength, friend, people);
-            castleGroup.add(roofMesh);
-            if (king != playerName){
-              castlewalls.push(roofMesh);
-            }
-
-            // Türme erstellen
-            const towerGeometry = new THREE.CylinderGeometry(5, 5, height, 32);
-            const towerMaterial = meaterial;
-            const towerMesh1 = new THREE.Mesh(towerGeometry, towerMaterial);
-            towerMesh1.position.set(-15, 0, -15);
-            towerMesh1.castShadow = true;
-            towerMesh1.receiveShadow = true;
-            addUserData(towerMesh1, force, soldiers, gold, type, strength, friend, people);
-            castleGroup.add(towerMesh1);
-            if (king != playerName){
-              castlewalls.push(towerMesh1);
-            }
-
-            const towerMesh2 = new THREE.Mesh(towerGeometry, towerMaterial);
-            towerMesh2.position.set(-15, 0, 15);
-            towerMesh2.castShadow = true;
-            towerMesh2.receiveShadow = true;
-            addUserData(towerMesh2, force, soldiers, gold, type, strength, friend, people);
-            castleGroup.add(towerMesh2);
-            if (king != playerName){
-              castlewalls.push(towerMesh2);
-            }
-
-            const towerMesh3 = new THREE.Mesh(towerGeometry, towerMaterial);
-            towerMesh3.position.set(15, 0, -15);
-            towerMesh3.castShadow = true;
-            towerMesh3.receiveShadow = true;
-            addUserData(towerMesh3, force, soldiers, gold, type, strength, friend, people);
-            castleGroup.add(towerMesh3);
-            if (king != playerName){
-              castlewalls.push(towerMesh3);
-            }
-
-            const towerMesh4 = new THREE.Mesh(towerGeometry, towerMaterial);
-            towerMesh4.position.set(15, 0, 15);
-            towerMesh4.castShadow = true;
-            towerMesh4.receiveShadow = true;
-            addUserData(towerMesh4, force, soldiers, gold, type, strength, friend, people);
-            castleGroup.add(towerMesh4);
-            if (king != playerName){
-              castlewalls.push(towerMesh4);
-            }
-
-            const wall1  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
-            wall1.position.set(-15, 0, 0);
-            wall1.castShadow = true;
-            wall1.receiveShadow = true;
-            wall1.rotation.y = Math.PI / 2;
-            addUserData(wall1, force, soldiers, gold, type, strength, friend, people);
-            castleGroup.add(wall1);
-            if (king != playerName){
-              castlewalls.push(wall1);
-            }
-
-            const wall2  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
-            wall2.position.set(15, 0, 0);
-            wall2.castShadow = true;
-            wall2.receiveShadow = true;
-            wall2.rotation.y = Math.PI / 2;
-            addUserData(wall2, force, soldiers, gold, type, strength, friend, people);
-            castleGroup.add(wall2);
-            if (king != playerName){
-              castlewalls.push(wall2);
-            }
-
-            const wall3  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
-            wall3.position.set(0, 0, 15);
-            wall3.castShadow = true;
-            wall3.receiveShadow = true;
-            addUserData(wall3, force, soldiers, gold, type, strength, friend, people);
-            castleGroup.add(wall3);
-            if (king != playerName){
-              castlewalls.push(wall3);
-            }
-
-            const wall4  = new THREE.Mesh(new THREE.BoxGeometry(20, (height / 2), 1), meaterial);
-            wall4.position.set(0, 0, -15);
-            wall4.castShadow = true;
-            wall4.receiveShadow = true;
-            addUserData(wall4, force, soldiers, gold, type, strength, friend, people);
-            castleGroup.add(wall4);
-            if (king != playerName){
-              castlewalls.push(wall4);
-            }
-            
-            addUserData(castleGroup, force, soldiers, gold, type, strength, friend, people);
-
-            allcastles.push(castleGroup);
-
-            return castleGroup;
-        }
+        ];
 
         function addUserData(object, force, soldiers, gold, type, strength, friend, people) {
             object.userData = { force, soldiers, gold, type, strength, friend, people };
@@ -1087,17 +1463,165 @@
             object.userData.corn = 0;
             object.userData.level = 1;
         }
+        function createCastlesmall(material, friend, soldiers, people, gold, force, strength, type, height, king) {
+            let castleGroup = new THREE.Group();
+            function updateCastle() {
+                setInterval(() => {
+                    allcastles.forEach(castleGroup => {
+                        // Iterate through each child of the castleGroup
+                        castleGroup.children.forEach(mesh => {
+                            let updated = false;
+
+                            // Check if the mesh belongs to a wall
+                            for (let wallKey in allcastleplans[0][type].walls) {
+                                let currentWall = allcastleplans[0][type].walls[wallKey];
+                                if (mesh === currentWall.mesh) {
+                                    if (!mesh.position.equals(currentWall.meshposition) ||
+                                        mesh.rotation.y !== currentWall.meshrotationy ||
+                                        mesh.material !== currentWall.material) {
+
+                                        mesh.position.copy(currentWall.meshposition);
+                                        mesh.rotation.y = currentWall.meshrotationy;
+                                        mesh.material = currentWall.material;
+                                        updated = true;
+                                    }
+                                    break;
+                                }
+                            }
+
+                            // Check if the mesh belongs to a tower
+                            if (!updated) {
+                                for (let towerKey in allcastleplans[0][type].towers) {
+                                    let currentTower = allcastleplans[0][type].towers[towerKey];
+                                    if (mesh === currentTower.mesh) {
+                                        if (!mesh.position.equals(currentTower.meshposition) ||
+                                            mesh.material !== currentTower.material) {
+
+                                            mesh.position.copy(currentTower.meshposition);
+                                            mesh.material = currentTower.material;
+                                            updated = true;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // Check if the mesh belongs to the main tower
+                            if (!updated) {
+                                for (let mainTowerKey in allcastleplans[0][type].maintower) {
+                                    let mainTower = allcastleplans[0][type].maintower[mainTowerKey];
+                                    if (mesh === mainTower.mesh) {
+                                        if (!mesh.position.equals(mainTower.meshposition) ||
+                                            mesh.material !== mainTower.material) {
+
+                                            mesh.position.copy(mainTower.meshposition);
+                                            mesh.material = mainTower.material;
+                                            updated = true;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // Check if the mesh belongs to the roof
+                            if (!updated) {
+                                for (let roofKey in allcastleplans[0][type].roofs) {
+                                    let roof = allcastleplans[0][type].roofs[roofKey];
+                                    if (mesh === roof.mesh) {
+                                        if (!mesh.position.equals(roof.meshposition) ||
+                                            mesh.rotation.y !== roof.meshrotationy ||
+                                            mesh.material !== roof.material) {
+
+                                            mesh.position.copy(roof.meshposition);
+                                            mesh.rotation.y = roof.meshrotationy;
+                                            mesh.material = roof.material;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
+                }, 500); // 0.5 seconds interval
+            }
+
+
+            function createCastle() {
+                // Iterate through the castle plans to create structures
+                for (let plan of allcastleplans) {
+                    // Create walls
+                    for (let wallKey in plan[type].walls) {
+                        let currentWall = plan[type].walls[wallKey];
+                        let wallMesh = currentWall.mesh.clone();
+                        wallMesh.position.copy(currentWall.meshposition);
+                        wallMesh.rotation.y = currentWall.meshrotationy;
+                        wallMesh.castShadow = true;
+                        wallMesh.receiveShadow = true;
+                        if (king != playerName) {
+                            castlewalls.push(wallMesh);
+                        }
+                        addUserData(wallMesh, force, soldiers, gold, type, strength, friend, people);
+                        castleGroup.add(wallMesh);
+                    }
+
+                    // Create towers
+                    for (let towerKey in plan[type].towers) {
+                        let currentTower = plan[type].towers[towerKey];
+                        let towerMesh = currentTower.mesh.clone();
+                        towerMesh.position.copy(currentTower.meshposition);
+                        towerMesh.castShadow = true;
+                        towerMesh.receiveShadow = true;
+                        if (king != playerName) {
+                            castlewalls.push(towerMesh);
+                        }
+                        addUserData(towerMesh, force, soldiers, gold, type, strength, friend, people);
+                        castleGroup.add(towerMesh);
+                    }
+
+                    // Create main tower
+                    for (let mainTowerKey in plan[type].maintower) {
+                        let mainTower = plan[type].maintower[mainTowerKey];
+                        let mainTowerMesh = mainTower.mesh.clone();
+                        mainTowerMesh.position.copy(mainTower.meshposition);
+                        mainTowerMesh.castShadow = true;
+                        mainTowerMesh.receiveShadow = true;
+                        if (king != playerName) {
+                            castlewalls.push(mainTowerMesh);
+                        }
+                        addUserData(mainTowerMesh, force, soldiers, gold, type, strength, friend, people);
+                        castleGroup.add(mainTowerMesh);
+                    }
+
+                    // Create roof
+                    for (let roofKey in plan[type].roofs) {
+                      let roof = plan[type].roofs[roofKey];
+                      let roofMesh = roof.mesh.clone();
+                      roofMesh.position.copy(roof.meshposition);
+                      roofMesh.rotation.y = roof.meshrotationy;
+                      roofMesh.castShadow = true;
+                      roofMesh.receiveShadow = true;
+                      addUserData(roofMesh, force, soldiers, gold, type, strength, friend, people);
+                      castleGroup.add(roofMesh);
+                    }
+                }
+            }
+
+            createCastle();
+            updateCastle();
+            allcastles.push(castleGroup);
+            return castleGroup;
+        }
 
         function loadCastlesFromJSON() {
             castleData.forEach((data, index) => {
                 const material = getMaterial(data.strength);
                 const castle = createCastlesmall(material, data.friend, data.soldiers, data.population, data.gold, data.force, data.strength, data.type, (data.level * 20), data.king);
 
+                // Position the entire castle group
                 castle.position.set(data.position.x, 7, data.position.z);
                 castle.castShadow = true;
                 castle.receiveShadow = true;
 
-                // Benutzerdaten hinzufügen
+                // Add user data to children
                 castle.children.forEach(child => {
                     child.userData = { ...data };
                     addedcastle.push(child);
@@ -1236,8 +1760,6 @@
             }
         }
 
-        let playerName = document.getElementById('username').innerHTML;
-
         let tradenow = true;
 
         function Trade(){
@@ -1297,27 +1819,31 @@
                                 }
                             });
                             playerCastle.children.forEach(child => {
-                                if (child.userData[gs] >= parseInt(pns) && selectedCastle.children[1].userData[ts] >= parseInt(cns)){
-                                    child.userData[gs] -= parseInt(pns);
-                                    child.userData[ts] += parseInt(cns);
-                                    playerCastle.userData[gs] -= parseInt(pns);
-                                    playerCastle.userData[ts] += parseInt(cns);
-                                    if (gs == "soldiers"){
-                                        child.userData.population -= parseInt(pns);
-                                        playerCastle.userData.population -= parseInt(pns);
+                                if (selectedCastle.children[0].userData.king != playerName) {
+                                    if (child.userData[gs] >= parseInt(pns) && selectedCastle.children[1].userData[ts] >= parseInt(cns)){
+                                        child.userData[gs] -= parseInt(pns);
+                                        child.userData[ts] += parseInt(cns);
+                                        playerCastle.userData[gs] -= parseInt(pns);
+                                        playerCastle.userData[ts] += parseInt(cns);
+                                        if (gs == "soldiers"){
+                                            child.userData.population -= parseInt(pns);
+                                            playerCastle.userData.population -= parseInt(pns);
+                                        }
+                                        if (ts == "soldiers"){
+                                            child.userData.population += parseInt(cns);
+                                            playerCastle.userData.population += parseInt(cns);
+                                        }
+                                        updateUserDataDisplay(child.userData);
+                                    }else {
+                                        console.log('not enough ' + gs + ' in ' + child.userData.king);
+                                        if (child.userData[gs] < parseInt(pns)){
+                                            showalert('we think you do not have enough ' + gs);
+                                        }/*else {
+                                            showalert(selectedObject.userData.king + ' does not have enough ' + ts);
+                                        }*/
                                     }
-                                    if (ts == "soldiers"){
-                                        child.userData.population += parseInt(cns);
-                                        playerCastle.userData.population += parseInt(cns);
-                                    }
-                                    updateUserDataDisplay(child.userData);
                                 }else {
-                                    console.log('not enough ' + gs + ' in ' + child.userData.king);
-                                    if (child.userData[gs] < parseInt(pns)){
-                                        showalert('we think you do not have enough ' + gs);
-                                    }/*else {
-                                        showalert(selectedObject.userData.king + ' does not have enough ' + ts);
-                                    }*/
+                                    showalert('you can not trade with yourself');
                                 }
                             });
                         }else {
@@ -1425,7 +1951,7 @@
                         let howmanytimes = parseInt(snsf);
                         takeasoldier();
                         function takeasoldier(){
-                            if (selectedCastle.children[1].userData.soldiers > 1 && playerCastle.children[1].userData.soldiers > 0){
+                            if (selectedCastle.children[1].userData.soldiers > 0 && playerCastle.children[1].userData.soldiers > 0){
                                 selectedCastle.children.forEach(child => {
                                     child.userData.soldiers -= 2;
                                     child.userData.population -= 2;
@@ -1446,6 +1972,12 @@
                                     setTimeout(takeasoldier, 100);
                                 }else {
                                     fightDataDisplay.style.display = "none";
+                                    playerCastle.children.forEach(child => {
+                                        child.userData.soldiers += 1;
+                                        child.userData.population += 1;
+                                    });
+                                    playerCastle.userData.soldiers += 1;
+                                    playerCastle.userData.population += 1;
                                     showalert('attack succesful');
                                 }
                             }else {
@@ -1553,6 +2085,12 @@
                                     setTimeout(takeasoldier, 100);
                                 }else {
                                     fightDataDisplay.style.display = "none";
+                                    playerCastle.children.forEach(child => {
+                                        child.userData.soldiers += 1;
+                                        child.userData.population += 1;
+                                    });
+                                    playerCastle.userData.soldiers += 1;
+                                    playerCastle.userData.population += 1;
                                     showalert('invasion succesful');
                                 }
                             }else {
@@ -1663,6 +2201,12 @@
                                     setTimeout(takeasoldier, 100);
                                 }else {
                                     fightDataDisplay.style.display = "none";
+                                    playerCastle.children.forEach(child => {
+                                        child.userData.soldiers += 1;
+                                        child.userData.population += 1;
+                                    });
+                                    playerCastle.userData.soldiers += 1;
+                                    playerCastle.userData.population += 1;
                                     showalert('battle succesful');
                                 }
                             }else {
