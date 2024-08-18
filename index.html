@@ -1012,7 +1012,7 @@
         let addfriendbtn = document.getElementById('addfriendbtn');
         addfriendbtn.addEventListener('click', () => {
             if (selectedObject) {
-                if (castleData[0].king != playerName){
+                if (castleData[0].king != selectedObject.userData.playername){
                     let son;
                     castleData.forEach(child => {
                         if (child.king == selectedObject.userData.playername){
@@ -1024,6 +1024,9 @@
                     }else {
                         son.friend = false;
                     }
+                    updateUserDataDisplay(son);
+                }else {
+                    showalert('you can not unfriend your own castle');
                 }
             }
         });
@@ -2506,7 +2509,7 @@
                         }else if (castleData[0].soldiers < parseInt(snsf)){
                             showalert('you do not have enough soldiers');
                         }else if (castleData[0].friend == true){
-                            showalert('you can not attack a friend');
+                            showalert('you can not invade a friend');
                         }
                     }
                 }else {
@@ -2596,11 +2599,11 @@
                     }else {
                         if (sodata.king == playerName){
                             console.log('wrong king');
-                            showalert('you can not attack yourself');
+                            showalert('you can not battle with yourself');
                         }else if (castleData[0].soldiers < parseInt(snsf)){
                             showalert('you do not have enough soldiers');
                         }else if (castleData[0].friend == true){
-                            showalert('you can not attack a friend');
+                            showalert('you can not battle with a friend');
                         }
                     }
                 }else {
