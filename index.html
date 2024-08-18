@@ -603,6 +603,12 @@
         let playerCastle;
         let castleData = [
             {
+                position: { x: 0, z: 0 }, force: 10, soldiers: 10, gold: 50, size: 1, type: 'castle',
+                strength: 15, friend: true, population: 30, queen: 'nobody', king: playerName,
+                horses: 0, cows: 2, goats: 2, chickens: 2, ricefields: 0, cornfields: 0,
+                workers: 10, weapons: 10, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 1
+            },
+            {
                 position: { x: -100, z: -150 }, force: 100, soldiers: 1000, gold: 1000000, size: 3, type: 'fortress',
                 strength: 175, friend: false, population: 3000, queen: 'nobody', king: 'teresa',
                 horses: 10, cows: 5, goats: 20, chickens: 50, ricefields: 3, cornfields: 3,
@@ -615,18 +621,18 @@
                 workers: 100, weapons: 100, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 2
             },
             {
-                position: { x: 0, z: 0 }, force: 10, soldiers: 10, gold: 50, size: 1, type: 'castle',
-                strength: 15, friend: true, population: 30, queen: 'nobody', king: playerName,
-                horses: 0, cows: 2, goats: 2, chickens: 2, ricefields: 0, cornfields: 0,
-                workers: 10, weapons: 10, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 1
-            },
-            {
                 position: { x: 210, z: -200 }, force: 25, soldiers: 500, gold: 500000, size: 3, type: 'fortress',
                 strength: 100, friend: false, population: 800, queen: 'nobody', king: 'lar',
                 horses: 5, cows: 10, goats: 10, chickens: 100, ricefields: 0, cornfields: 0,
                 workers: 200, weapons: 10, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 3
             }
         ];
+        let playerat0 = {
+            position: { x: 0, z: 0 }, force: 10, soldiers: 10, gold: 50, size: 1, type: 'castle',
+            strength: 15, friend: true, population: 30, queen: 'nobody', king: playerName,
+            horses: 0, cows: 2, goats: 2, chickens: 2, ricefields: 0, cornfields: 0,
+            workers: 10, weapons: 10, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 1
+        }
         let addedcastle = [];
         let dataChanged = false;
         let resourcesChanged = false;
@@ -644,7 +650,7 @@
                 let changeUserName = document.querySelector('.changeUserName');
                 if(tradediv.style.display == 'block'){
                     tradediv.style.display = 'none';
-                }else if (selectedObject.userData.king != playerCastle.children[1].userData.king){
+                }else if (selectedObject.userData.playername != castleData[0].king){
                     selldiv.style.display = 'none';
                     shopdiv.style.display = 'none';
                     tradediv.style.display = 'block';
@@ -654,7 +660,7 @@
                     changeUserName.style.display = 'none';
                     getnewcastlediv.style.display = 'none';
                 }else {
-                    if (selectedObject.userData.king == playerCastle.children[1].userData.king){
+                    if (selectedObject.userData.playername == castleData[0].king){
                         showalert('you can not trade with yourself');
                     }
                 }
@@ -760,7 +766,7 @@
         let shopbtn = document.getElementById('shopbtn');
         shopbtn.addEventListener('click', () => {
             let shopdiv = document.querySelector('.shopdiv');
-            if (selectedObject && playerCastle && playerCastle.children[0].userData.king != selectedObject.userData.king){
+            if (selectedObject && playerCastle && castleData[0].king != selectedObject.userData.playername){
                 let getnewcastlediv = document.querySelector('.getnewcastlediv');
                 let selldiv = document.querySelector('.selldiv');
                 let createjobdiv = document.querySelector('.createjobdiv');
@@ -785,7 +791,7 @@
                     showalert('select a castle to buy from and try again');
                 }else if (!playerCastle){
                     showalert('please try again');
-                }else if (playerCastle.children[0].userData.king == selectedObject.userData.king){
+                }else if (castleData[0].king == selectedObject.userData.playername){
                     showalert('you can not shop in your own castle');
                 }
                 shopdiv.style.display = 'none';
@@ -795,7 +801,7 @@
         let sellbtn = document.getElementById('sellbtn');
         sellbtn.addEventListener('click', () => {
             let selldiv = document.querySelector('.selldiv');
-            if (selectedObject && playerCastle && playerCastle.children[0].userData.king != selectedObject.userData.king){
+            if (selectedObject && playerCastle && castleData[0].king != selectedObject.userData.playername){
                 let getnewcastlediv = document.querySelector('.getnewcastlediv');
                 let createjobdiv = document.querySelector('.createjobdiv');
                 let createcitizensdiv = document.querySelector('.createcitizensdiv');
@@ -820,7 +826,7 @@
                     showalert('select a castle too sell to and try again');
                 }else if (!playerCastle){
                     showalert('please try again');
-                }else if (playerCastle.children[0].userData.king == selectedObject.userData.king){
+                }else if (castleData[0].king == selectedObject.userData.playername){
                     showalert('you can not sell too your own castle');
                 }
                 selldiv.style.display = 'none';
@@ -830,7 +836,7 @@
         let fightbtn = document.getElementById('fightbtn');
         fightbtn.addEventListener('click', () => {
             let fightdiv = document.querySelector('.fightdiv');
-            if (selectedObject && playerCastle && playerCastle.children[0].userData.king != selectedObject.userData.king){
+            if (selectedObject && playerCastle && castleData[0].king != selectedObject.userData.playername){
                 let getnewcastlediv = document.querySelector('.getnewcastlediv');
                 let createjobdiv = document.querySelector('.createjobdiv');
                 let createcitizensdiv = document.querySelector('.createcitizensdiv');
@@ -855,7 +861,7 @@
                     showalert('select a castle too fight and try again');
                 }else if (!playerCastle){
                     showalert('please try again');
-                }else if (playerCastle.children[0].userData.king == selectedObject.userData.king){
+                }else if (castleData[0].king == selectedObject.userData.playername){
                     showalert('you can not fight with your own castle');
                 }
                 fightdiv.style.display = 'none';
@@ -914,9 +920,9 @@
                 localStorage.setItem('username', change_user_name_input.value);
                 playerName = change_user_name_input.value;
                 playerCastle.userData.king = playerName;
-                castleData[2].king = playerName;
+                castleData[0].king = playerName;
                 playerCastle.children.forEach(child => {
-                    child.userData.king = playerName;
+                    child.userData.playername = playerName;
                 });
             }
         }
@@ -936,8 +942,12 @@
         });
 
         function buynewcastle() {
-            let price_container = document.getElementById('price-container');
-            createthenewcastle(select_castle.value, playerCastle.position.x, 7, playerCastle.position.z, price_container.value);
+            if (castleData[0].type != select_castle.value){
+                let price_container = document.getElementById('price-container');
+                createthenewcastle(select_castle.value, playerCastle.position.x, 7, playerCastle.position.z, price_container.value);
+            }else if (castleData[0].type == select_castle.value){
+                showalert('you already have this ' + newselectedcastle);
+            }
         }
 
         function createthenewcastle(selectedcastle, playercastlepx, playercastlepy, playercastlepz, castlepricevalue) {
@@ -945,59 +955,27 @@
                 let newselectedcastle = selectedcastle;
                 let castle_price = castlepricevalue;
                 let disable_interaction = document.querySelector('.disable-interaction');
-                if (playerCastle.children[0].userData.gold >= parseInt(castle_price) && playerCastle.children[0].userData.type != newselectedcastle) {
+                if (castleData[0].gold >= parseInt(castle_price)) {
                     disable_interaction.style.display = 'block';
                     let initialplayerpositiony = playerCastle.position.y;
                     moveObjectToTarget(3000, playerCastle, playerCastle.position.x, -80, playerCastle.position.z);
                     setTimeout(() => {
-                        playerCastle.children[0].userData.gold -= parseInt(castle_price);
-                        let playercastleuserdata = playerCastle.children[0].userData;
+                        castleData[0].gold -= parseInt(castle_price);
 
-                        let newcastleparent = createCastlesmall(0, true, playercastleuserdata.soldiers, playercastleuserdata.population, playercastleuserdata.gold, playercastleuserdata.force, playercastleuserdata.strength, newselectedcastle, 32, playercastleuserdata.king);
-                        newcastleparent.children.forEach(newcastle => {
-                            newcastle.userData.position = {
-                                x: playerCastle.position.x,
-                                z: playerCastle.position.z
-                            }
-                            //playerCastle.position.x = castle.userData.position.x;
-                            //playerCastle.position.z = castle.userData.position.z;
-                            newcastle.userData.force = playercastleuserdata.force;
-                            newcastle.userData.soldiers = playercastleuserdata.soldiers;
-                            newcastle.userData.gold = playercastleuserdata.gold;
-                            newcastle.userData.size = playercastleuserdata.size;
-                            newcastle.userData.type = newselectedcastle;
-                            newcastle.userData.strength = playercastleuserdata.strength;
-                            newcastle.userData.friend = true;
-                            newcastle.userData.population = playercastleuserdata.population;
-                            newcastle.userData.queen = playercastleuserdata.queen;
-                            newcastle.userData.king = playerName;
-                            newcastle.userData.horses = playercastleuserdata.horses;
-                            newcastle.userData.cows = playercastleuserdata.cows;
-                            newcastle.userData.goats = playercastleuserdata.goats;
-                            newcastle.userData.chickens = playercastleuserdata.chickens;
-                            newcastle.userData.ricefields = playercastleuserdata.ricefields;
-                            newcastle.userData.cornfields = playercastleuserdata.cornfields;
-                            newcastle.userData.workers = playercastleuserdata.workers;
-                            newcastle.userData.weapons = playercastleuserdata.weapons;
-                            newcastle.userData.popularity = playercastleuserdata.popularity;
-                            newcastle.userData.meat = playercastleuserdata.meat;
-                            newcastle.userData.eggs = playercastleuserdata.eggs;
-                            newcastle.userData.milk = playercastleuserdata.milk;
-                            newcastle.userData.rice = playercastleuserdata.rice;
-                            newcastle.userData.corn = playercastleuserdata.corn;
-                            newcastle.userData.level = playercastleuserdata.level + 1;
-                            addedcastle.push(newcastle);
-                            updateUserDataDisplay(newcastle.userData);
-                        });
+                        let newcastleparent = createCastlesmall(playerName, newselectedcastle);
                         newcastleparent.position.set(playercastlepx, -80, playercastlepz);
                         addedcastle.forEach(child => {
-                            if (child.userData.king == playerName){
+                            if (castleData[0].king == playerName){
                                 // remove child from list
                                 addedcastle.splice(addedcastle.indexOf(child), 1);
                                 // remove child perant from list allcastles
                                 allcastles.splice(allcastles.indexOf(child.parentElement), 1);
 
                             }
+                        });
+                        newcastleparent.children.forEach(child => {
+                            child.userData.playername = playerName;
+                            addedcastle.push(child);
                         });
                         if (selectedObject){
                             if (selectedObject.parent == playerCastle){
@@ -1012,8 +990,6 @@
                         newcastleparent.receiveShadow = true;
                         newcastleparent.castShadow = true;
 
-                        newcastleparent.userData = newcastleparent.children[0].userData;
-
                         allcastles.push(newcastleparent);
 
                         scene.add(newcastleparent);
@@ -1022,12 +998,10 @@
                             disable_interaction.style.display = 'none';
                         }, 9000);
                     },3000);
-                    
+
                 }else {
-                    if (playerCastle.children[0].userData.gold < castle_price){
+                    if (castleData[0].gold < castle_price){
                         showalert('you do not have enough gold to buy this ' + newselectedcastle);
-                    }else if (playerCastle.children[0].userData.type == newselectedcastle){
-                        showalert('you already have this ' + newselectedcastle);
                     }
                 }
             }
@@ -1038,19 +1012,17 @@
         let addfriendbtn = document.getElementById('addfriendbtn');
         addfriendbtn.addEventListener('click', () => {
             if (selectedObject) {
-                if (selectedObject.userData.king != playerName){
-                    if (selectedObject.userData.friend == false){
-                        selectedObject.parent.children.forEach(child => {
-                            child.userData.friend = true;
-                            updateUserDataDisplay(child.userData);
-                        });
-                        selectedObject.parent.userData.friend = true;
+                if (castleData[0].king != playerName){
+                    let son;
+                    castleData.forEach(child => {
+                        if (child.king == selectedObject.userData.playername){
+                            son = child;
+                        }
+                    })
+                    if (son.friend == false){
+                        son.friend = true;
                     }else {
-                        selectedObject.parent.children.forEach(child => {
-                            child.userData.friend = false;
-                            updateUserDataDisplay(child.userData);
-                        });
-                        selectedObject.parent.userData.friend = false;
+                        son.friend = false;
                     }
                 }
             }
@@ -1060,59 +1032,47 @@
             setTimeout(() => {
                 if (playerCastle){
                     playerName = localStorage.getItem('username');
-                    playerCastle.userData.king = playerName;
-                    castleData[2].king = playerName;
-                    playerCastle.children.forEach(child => {
-                        child.userData.king = playerName;
-                    });
+                    playerCastle.userData.playername = playerName;
+                    castleData[0].king = playerName;
                 }
             }, 1000);
         }
         function CreateSoldiers() {
             let soldiers = document.getElementById('select-soldiers-number').value;
             if(playerCastle){
-                playerCastle.children.forEach(child => {
-                    if ((child.userData.population - child.userData.workers - child.userData.soldiers) >= parseInt(soldiers)){
-                        child.userData.soldiers += parseInt(soldiers);
-                        playerCastle.userData.soldiers += parseInt(soldiers);
-                        dataChanged = true;
-                        updateUserDataDisplay(child.userData);
-                    }else {
-                        showalert('you do not have enough citizens');
-                    }
-                });
+                if ((castleData[0].population - castleData[0].workers - castleData[0].soldiers) >= parseInt(soldiers)){
+                    castleData[0].soldiers += parseInt(soldiers);
+                    dataChanged = true;
+                    updateUserDataDisplay(castleData[0]);
+                }else {
+                    showalert('you do not have enough citizens');
+                }
             }
         }
         function CreateCitizens() {
             let typename = document.getElementById('select-type-name').value;
             let typenum = document.getElementById('select-type-number').value;
             if(playerCastle){
-                playerCastle.children.forEach(child => {
-                    if (child.userData[typename] >= parseInt(typenum)){
-                        child.userData[typename] -= parseInt(typenum);
-                        playerCastle.userData[typename] -= parseInt(typenum);
-                        dataChanged = true;
-                        updateUserDataDisplay(child.userData);
-                    }else {
-                        showalert(`you do not have enough ${typename}`);
-                    }
-                });
+                if (castleData[0][typename] >= parseInt(typenum)){
+                    castleData[0][typename] -= parseInt(typenum);
+                    dataChanged = true;
+                    updateUserDataDisplay(castleData[0]);
+                }else {
+                    showalert(`you do not have enough ${typename}`);
+                }
             }
         }
         function CreateJob() {
             let jobtypenum = document.getElementById('select-jobtype-number').value;
             let jobtypename = document.getElementById('select-job-type').value;
             if(playerCastle){
-                playerCastle.children.forEach(child => {
-                    if ((child.userData.population - child.userData.workers - child.userData.soldiers) >= parseInt(jobtypenum)){
-                        child.userData[jobtypename] += parseInt(jobtypenum);
-                        playerCastle.userData[jobtypename] += parseInt(jobtypenum);
-                        dataChanged = true;
-                        updateUserDataDisplay(child.userData);
-                    }else {
-                        showalert('you do not have enough citizens');
-                    }
-                });
+                if ((castleData[0].population - castleData[0].workers - castleData[0].soldiers) >= parseInt(jobtypenum)){
+                    castleData[0][jobtypename] += parseInt(jobtypenum);
+                    dataChanged = true;
+                    updateUserDataDisplay(castleData[0]);
+                }else {
+                    showalert('you do not have enough citizens');
+                }
             }
         }
         function moveObjectToTarget(duration, object, x_target, y_target, z_target) {
@@ -1264,9 +1224,9 @@
             window.addEventListener('mouseup', onMouseUp, false);
 
             // Start der periodischen Überprüfung und Aktualisierung der Daten
-            setInterval(updateCastleResources, 15000);
+            setInterval(updateCastleResources, 30000);
             setInterval(updateCastleStrength, 500);
-            setInterval(updatePopulation, 30000);
+            setInterval(updatePopulation, 60000);
         }
 
         function createCastle(type) {
@@ -1781,7 +1741,7 @@
                 }
             }
         ];
-        
+
         function addUserData(object, force, soldiers, gold, type, strength, friend, people) {
             object.userData = { force, soldiers, gold, type, strength, friend, people };
             object.userData.horses = 0;
@@ -1800,7 +1760,7 @@
             object.userData.corn = 0;
             object.userData.level = 1;
         }
-        function createCastlesmall(material, friend, soldiers, people, gold, force, strength, type, height, king) {
+        function createCastlesmall(name, type) {
             let castleGroup = new THREE.Group();
             function updateCastle() {
                 setInterval(() => {
@@ -1893,10 +1853,10 @@
                         wallMesh.rotation.y = currentWall.meshrotationy;
                         wallMesh.castShadow = true;
                         wallMesh.receiveShadow = true;
-                        if (king != playerName) {
+                        if (name != playerName) {
                             castlewalls.push(wallMesh);
                         }
-                        addUserData(wallMesh, force, soldiers, gold, type, strength, friend, people);
+                        wallMesh.userData.playername = name;
                         castleGroup.add(wallMesh);
                     }
 
@@ -1907,10 +1867,10 @@
                         towerMesh.position.copy(currentTower.meshposition);
                         towerMesh.castShadow = true;
                         towerMesh.receiveShadow = true;
-                        if (king != playerName) {
+                        if (name != playerName) {
                             castlewalls.push(towerMesh);
                         }
-                        addUserData(towerMesh, force, soldiers, gold, type, strength, friend, people);
+                        towerMesh.userData.playername = name;
                         castleGroup.add(towerMesh);
                     }
 
@@ -1921,10 +1881,10 @@
                         mainTowerMesh.position.copy(mainTower.meshposition);
                         mainTowerMesh.castShadow = true;
                         mainTowerMesh.receiveShadow = true;
-                        if (king != playerName) {
+                        if (name != playerName) {
                             castlewalls.push(mainTowerMesh);
                         }
-                        addUserData(mainTowerMesh, force, soldiers, gold, type, strength, friend, people);
+                        mainTowerMesh.userData.playername = name;
                         castleGroup.add(mainTowerMesh);
                     }
 
@@ -1936,7 +1896,10 @@
                       roofMesh.rotation.y = roof.meshrotationy;
                       roofMesh.castShadow = true;
                       roofMesh.receiveShadow = true;
-                      addUserData(roofMesh, force, soldiers, gold, type, strength, friend, people);
+                      if (name != playerName) {
+                        castlewalls.push(roofMesh);
+                      }
+                      roofMesh.userData.playername = name;
                       castleGroup.add(roofMesh);
                     }
                 }
@@ -1951,7 +1914,7 @@
         function loadCastlesFromJSON() {
             castleData.forEach((data, index) => {
                 const material = getMaterial(data.strength);
-                const castle = createCastlesmall(material, data.friend, data.soldiers, data.population, data.gold, data.force, data.strength, data.type, (data.level * 20), data.king);
+                const castle = createCastlesmall(data.king, data.type);
 
                 // Position the entire castle group
                 castle.position.set(data.position.x, 7, data.position.z);
@@ -1960,7 +1923,7 @@
 
                 // Add user data to children
                 castle.children.forEach(child => {
-                    child.userData = { ...data };
+                    /*child.userData = { ...data };*/
                     addedcastle.push(child);
                 });
 
@@ -2004,16 +1967,14 @@
                         castle.position.x -= deltaX * 0.5;
                         castle.position.z -= deltaY * 0.5;
                     }
-                    castle.children.forEach(child => {
-                        child.userData.position = {
-                            x: castle.position.x,
-                            z: castle.position.z
-                        };
+                    castleData.forEach(child => {
+                        if (child.king == playerName){
+                            child.position = {
+                                x: castle.position.x,
+                                z: castle.position.z
+                            };
+                        }
                     });
-                    castle.userData.position = {
-                        x: castle.position.x,
-                        z: castle.position.z
-                    }
                 }else {
                     camera.position.x -= deltaX * 0.5;
                     camera.position.z -= deltaY * 0.5;
@@ -2055,16 +2016,14 @@
                         castle.position.x -= deltaX * 0.5;
                         castle.position.z -= deltaY * 0.5;
                     }
-                    castle.children.forEach(child => {
-                        child.userData.position = {
-                            x: castle.position.x,
-                            z: castle.position.z
-                        };
+                    castleData.forEach(child => {
+                        if (child.king == playerName){
+                            child.position = {
+                                x: castle.position.x,
+                                z: castle.position.z
+                            };
+                        }
                     });
-                    castle.userData.position = {
-                        x: castle.position.x,
-                        z: castle.position.z
-                    }
                 }else {
                     camera.position.x -= deltaX * 0.5;
                     camera.position.z -= deltaY * 0.5;
@@ -2093,7 +2052,13 @@
             if (intersects.length > 0) {
                 selectedObject = intersects[0].object;
                 dataChanged = true;
-                updateUserDataDisplay(selectedObject.userData);
+                let sodata;
+                castleData.forEach(child => {
+                    if (child.king == selectedObject.userData.playername){
+                        sodata = child;
+                    }
+                });
+                updateUserDataDisplay(sodata);
             }
         }
 
@@ -2101,7 +2066,7 @@
 
         let lasttradeitem;
 
-        function Trade(){
+        /*function Trade(){
             if (tradenow == true) {
                 tradenow = false;
                 let cns = document.getElementById("computer-number-select").value;
@@ -2183,9 +2148,7 @@
                                         console.log('not enough ' + gs + ' in ' + child.userData.king);
                                         if (child.userData[gs] < parseInt(pns)){
                                             showalert('we think you do not have enough ' + gs);
-                                        }/*else {
-                                            showalert(selectedObject.userData.king + ' does not have enough ' + ts);
-                                        }*/
+                                        }
                                     }
                                 }else {
                                     showalert('you can not trade with yourself');
@@ -2207,6 +2170,96 @@
 
             }
             tradenow = true;
+        }*/
+        function Trade() {
+            if (tradenow == true) {
+                tradenow = false;
+                let cns = parseInt(document.getElementById("computer-number-select").value);
+                let ts = document.getElementById("take-select").value;
+                let pns = parseInt(document.getElementById("player-number-select").value);
+                let gs = document.getElementById("give-select").value;
+
+                // Check for invalid trade combinations
+                const invalidCombinations = [
+                    { take: "soldiers", give: "eggs" },
+                    { take: "soldiers", give: "rice" },
+                    { take: "soldiers", give: "corn" },
+                    { take: "weapons", give: "eggs" },
+                    { take: "weapons", give: "rice" },
+                    { take: "weapons", give: "corn" },
+                    { take: "weapons", give: "meat" },
+                ];
+
+                if (gs == lasttradeitem) {
+                    showalert('Your offer was declined');
+                } else if (invalidCombinations.some(combo => combo.take == ts && combo.give == gs)) {
+                    showalert('Your offer was declined');
+                } else {
+                    if (lasttradeitem != ts) {
+                        lasttradeitem = ts;
+                    }
+
+                    if (cns - pns < 9 && ts != gs) {
+                        if (selectedObject && playerCastle) {
+                            const selectedCastle = selectedObject.parent;
+                            let validTrade = true;
+
+                            let objectTradeData;
+
+                            castleData.forEach(child => {
+                                if (selectedObject.userData.playername == child.king){
+                                    objectTradeData = child;
+                                    if (child.king != playerName) {
+                                        if (child[ts] < cns || castleData[0][gs] < pns) {
+                                            validTrade = false;
+                                        }
+                                    }
+                                }
+                            });
+
+                            if (validTrade) {
+                                if (castleData[0].king == objectTradeData.king){
+                                    showalert('you can not trade with yourself');
+                                }else {
+                                    if (objectTradeData.king != playerName) {
+                                        objectTradeData[ts] -= cns;
+                                        objectTradeData[gs] += pns;
+
+                                        if (ts == "soldiers") {
+                                            objectTradeData.population -= cns;
+                                        }
+                                        if (gs == "soldiers") {
+                                            objectTradeData.population += pns;
+                                        }
+                                        updateUserDataDisplay(objectTradeData);
+                                    }
+
+                                    if (castleData[0].king == playerName) {
+                                        castleData[0][gs] -= pns;
+                                        castleData[0][ts] += cns;
+
+                                        if (gs == "soldiers") {
+                                            castleData[0].population -= pns;
+                                        }
+                                        if (ts == "soldiers") {
+                                            castleData[0].population += cns;
+                                        }
+                                        updateUserDataDisplay(castleData[0]);
+                                    }
+                                }
+                            } else {
+                                showalert('Not enough resources to complete the trade');
+                            }
+                        } else {
+                            showalert('No castle selected or your castle was not found');
+                        }
+                    } else {
+                        showalert('Your offer was declined');
+                    }
+                }
+
+                tradenow = true;
+            }
         }
         let shopnow = true;
         function shop() {
@@ -2216,9 +2269,15 @@
             if (selectedObject && playerCastle && shopnow == true) {
                 shopnow = false;
                 const selectedCastle = selectedObject.parent;
-                if (ssi == "soldiers" && (selectedCastle.children[0].userData.soldiers - parseInt(ssn)) <= 100) {
+                let sodata;
+                castleData.forEach(child => {
+                    if (child.king == selectedObject.userData.playername){
+                        sodata = child;
+                    }
+                });
+                if (ssi == "soldiers" && (sodata.soldiers - parseInt(ssn)) <= 100) {
                     showalert('Your offer was declined');
-                }else if (ssi == "horses" && (selectedCastle.children[0].userData.horses - parseInt(ssn)) <= 20) {
+                }else if (ssi == "horses" && (sodata.horses - parseInt(ssn)) <= 20) {
                     showalert('Your offer was declined');
                 }else if (ssi == "ricefields" && (parseInt(siv) * parseInt(ssn)) <= (parseInt(ssn) * 10)) {
                     showalert('Your offer was declined');
@@ -2226,45 +2285,31 @@
                     showalert('Your offer was declined');
                 }else {
                     if (parseInt(siv) == siv){
-                        if (selectedCastle.children[0].userData.king != playerName && playerCastle.children[0].userData.gold >= parseInt(siv) && parseInt(ssn) <= parseInt(siv)){
-                            if (selectedCastle.children[0].userData[ssi] >= parseInt(ssn)){
-                                selectedCastle.userData[ssi] -= parseInt(ssn);
-                                selectedCastle.userData.gold += parseInt(siv);
-                                selectedCastle.children.forEach(child => {
-                                    child.userData[ssi] -= parseInt(ssn);
-                                    child.userData.gold += parseInt(siv);
-                                    if (ssi == "soldiers"){
-                                        child.userData.population -= parseInt(ssn);
-                                    }
-                                });
+                        if (sodata.king != playerName && castleData[0].gold >= parseInt(siv) && parseInt(ssn) <= parseInt(siv)){
+                            if (sodata[ssi] >= parseInt(ssn)){
+                                sodata[ssi] -= parseInt(ssn);
+                                sodata.gold += parseInt(siv);
                                 if (ssi == "soldiers"){
-                                    selectedCastle.userData.population -= parseInt(ssn);
+                                    sodata.population -= parseInt(ssn);
                                 }
-                                updateUserDataDisplay(selectedCastle.children[0].userData);
-                                playerCastle.userData[ssi] += parseInt(ssn);
-                                playerCastle.userData.gold -= parseInt(siv);
-                                playerCastle.children.forEach(playercastlechild => {
-                                    playercastlechild.userData.gold -= parseInt(siv);
-                                    playercastlechild.userData[ssi] += parseInt(ssn);
-                                    if (ssi == "soldiers"){
-                                        playercastlechild.userData.population += parseInt(ssn);
-                                    }
-                                });
+                                updateUserDataDisplay(sodata);
+                                castleData[0][ssi] += parseInt(ssn);
+                                castleData[0].gold -= parseInt(siv);
                                 if (ssi == "soldiers"){
-                                    playerCastle.userData.population += parseInt(ssn);
+                                    castleData[0].population += parseInt(ssn);
                                 }
-                                updateUserDataDisplay(playerCastle.userData);
+                                updateUserDataDisplay(castleData[0]);
                             }else {
-                                console.log(selectedCastle.children[0].userData.king + ' does not have enough ' + ssi);
-                                if (selectedCastle.children[0].userData[ssi] < parseInt(ssn)){
-                                    showalert(selectedCastle.children[0].userData.king + ' does not have enough ' + ssi);
+                                console.log(sodata.king + ' does not have enough ' + ssi);
+                                if (sodata[ssi] < parseInt(ssn)){
+                                    showalert(sodata.king + ' does not have enough ' + ssi);
                                 }
                             }
                         }else {
-                            if (selectedCastle.children[0].userData.king == playerName){
+                            if (sodata.king == playerName){
                                 console.log('wrong king');
                                 showalert('you can not buy from yourself');
-                            }else if (playerCastle.children[0].userData.gold < parseInt(siv)){
+                            }else if (castleData[0].gold < parseInt(siv)){
                                 console.log('not enough gold');
                                 showalert('you do not have enough gold');
                             }else if (parseInt(ssn) > parseInt(siv)){
@@ -2280,41 +2325,8 @@
         }
 
         function resetplayer() {
-            playerCastle.children.forEach(castle => {
-                castle.userData.position = {
-                    x: 0,
-                    z: 0
-                }
-                //playerCastle.position.x = castle.userData.position.x;
-                //playerCastle.position.z = castle.userData.position.z;
-                castle.userData.force = 10;
-                castle.userData.soldiers = 10;
-                castle.userData.gold = 50;
-                castle.userData.size = 1;
-                castle.userData.type = 'castle';
-                castle.userData.strength = 15;
-                castle.userData.friend = true;
-                castle.userData.population = 30;
-                castle.userData.queen = 'nobody';
-                castle.userData.king = document.getElementById('username').innerHTML;
-                castle.userData.horses = 0;
-                castle.userData.cows = 2;
-                castle.userData.goats = 2;
-                castle.userData.chickens = 2;
-                castle.userData.ricefields = 0;
-                castle.userData.cornfields = 0;
-                castle.userData.workers = 10;
-                castle.userData.weapons = 10;
-                castle.userData.popularity = 0;
-                castle.userData.meat = 0;
-                castle.userData.eggs = 0;
-                castle.userData.milk = 0;
-                castle.userData.rice = 0;
-                castle.userData.corn = 0;
-                castle.userData.level = 1;
-                updateUserDataDisplay(castle.userData);
-            });
-            playerCastle.userData = playerCastle.children[0].userData;
+            castleData[0] = playerat0;
+            updateUserDataDisplay(castleData[0]);
         }
 
         function fight() {
@@ -2325,7 +2337,13 @@
             }else if (sns == "attack"){
                 if (selectedObject && playerCastle){
                     const selectedCastle = selectedObject.parent;
-                    if (selectedCastle.children[0].userData.king != playerName && playerCastle.children[0].userData.soldiers >= parseInt(snsf) && selectedCastle.children[0].userData.friend == false){
+                    let sodata;
+                    castleData.forEach(child => {
+                        if (child.king == selectedObject.userData.playername){
+                            sodata = child;
+                        }
+                    });
+                    if (sodata.king != playerName && castleData[0].soldiers >= parseInt(snsf) && sodata.friend == false){
                         let soldierfightnum = document.getElementById('soldierfightnum');
                         let fightDataDisplay = document.getElementById('fightDataDisplay');
                         fightDataDisplay.style.display = "flex";
@@ -2334,42 +2352,27 @@
                         let howmanytimes = parseInt(snsf);
                         takeasoldier();
                         function takeasoldier(){
-                            if (selectedCastle.children[1].userData.soldiers > 0 && playerCastle.children[1].userData.soldiers > 0){
-                                selectedCastle.children.forEach(child => {
-                                    child.userData.soldiers -= 2;
-                                    child.userData.population -= 2;
-                                    updateUserDataDisplay(child.userData);
-                                });
-                                selectedCastle.userData.soldiers -= 2;
-                                selectedCastle.userData.population -= 2;
+                            if (sodata.soldiers > 0 && castleData[0].soldiers > 0){
+                                sodata.soldiers -= 2;
+                                sodata.population -= 2;
+                                updateUserDataDisplay(sodata);
 
-                                playerCastle.children.forEach(child => {
-                                    child.userData.soldiers -= 1;
-                                    child.userData.population -= 1;
-                                });
-                                playerCastle.userData.soldiers -= 1;
-                                playerCastle.userData.population -= 1;
+                                castleData[0].soldiers -= 1;
+                                castleData[0].population -= 1;
                                 soldierfightnum.textContent = (parseInt(soldierfightnum.textContent) - 1);
                                 howmanytimes -= 1;
                                 if (howmanytimes >= 0){
                                     setTimeout(takeasoldier, 100);
                                 }else {
                                     fightDataDisplay.style.display = "none";
-                                    playerCastle.children.forEach(child => {
-                                        child.userData.soldiers += 1;
-                                        child.userData.population += 1;
-                                    });
-                                    playerCastle.userData.soldiers += 1;
-                                    playerCastle.userData.population += 1;
+                                    castleData[0].soldiers += 1;
+                                    castleData[0].population += 1;
                                     showalert('attack succesful');
                                 }
                             }else {
-                                if (selectedCastle.children[1].userData.soldiers < 2){
+                                if (sodata.soldiers < 2){
                                     // remove the castle from allcastles list
-                                    playerCastle.children.forEach(child => {
-                                        child.userData.gold += selectedCastle.children[1].userData.gold;
-                                    });
-                                    playerCastle.userData.gold += selectedCastle.children[1].userData.gold;
+                                    castleData[0].gold += sodata.gold;
                                     allcastles.forEach((castle, index) => {
                                         if (castle === selectedCastle) {
                                             allcastles.splice(index, 1);
@@ -2382,7 +2385,7 @@
                                         fightDataDisplay.style.display = "none";
                                     }, 3000);
                                     showalert('you won!');
-                                }else if (playerCastle.children[1].userData.soldiers < 1){
+                                }else if (castleData[0].soldiers < 1){
                                     let initialplayerpositiony = playerCastle.position.y;
                                     moveObjectToTarget(3000, playerCastle, playerCastle.position.x, -80, playerCastle.position.z);
                                     createthenewcastle("castle", 0, 7, 0, 0);
@@ -2406,18 +2409,18 @@
                         }
 
                     }else {
-                        if (selectedCastle.children[0].userData.king == playerName){
+                        if (sodata.king == playerName){
                             console.log('wrong king');
                             showalert('you can not attack yourself');
-                        }else if (playerCastle.children[1].userData.soldiers < parseInt(snsf)){
+                        }else if (castleData[0].soldiers < parseInt(snsf)){
                             showalert('you do not have enough soldiers');
-                        }else if (selectedCastle.children[0].userData.friend == true){
+                        }else if (castleData[0].friend == true){
                             showalert('you can not attack a friend');
                         }
                     }
                 }else {
                     console.log('no castle selected');
-                    if (playerCastle){
+                    if (!selectedObject){
                         showalert('no castle selected');
                     }else {
                         showalert('your castle was not found');
@@ -2426,48 +2429,41 @@
             }else if (sns == "invade"){
                 if (selectedObject && playerCastle){
                     const selectedCastle = selectedObject.parent;
-                    if (selectedCastle.children[0].userData.king != playerName && playerCastle.children[0].userData.soldiers >= parseInt(snsf) && selectedCastle.children[0].userData.friend == false){
+                    let sodata;
+                    castleData.forEach(child => {
+                        if (child.king == selectedObject.userData.playername){
+                            sodata = child;
+                        }
+                    });
+                    if (sodata.king != playerName && castleData[0].soldiers >= parseInt(snsf) && sodata.friend == false){
                         let soldierfightnum = document.getElementById('soldierfightnum');
                         let fightDataDisplay = document.getElementById('fightDataDisplay');
                         fightDataDisplay.style.display = "flex";
                         soldierfightnum.textContent = parseInt(snsf);
                         // remove 1 soldier from the computer castle every second if the computer castle has more than 1 soldier
                         let howmanytimes = parseInt(snsf);
-                        let strengthv = selectedCastle.children[1].userData.strength;
+                        let strengthv = sodata.strength;
                         takeasoldier();
                         function takeasoldier(){
-                            if (strengthv > 0.5 && playerCastle.children[1].userData.soldiers > 0){
-                                selectedCastle.children.forEach(child => {
-                                    strengthv -= 0.5;
-                                });
+                            if (strengthv > 0.5 && castleData[0].soldiers > 0){
+                                strengthv -= 0.5;
 
-                                playerCastle.children.forEach(child => {
-                                    child.userData.soldiers -= 1;
-                                    child.userData.population -= 1;
-                                });
-                                playerCastle.userData.soldiers -= 1;
-                                playerCastle.userData.population -= 1;
+                                castleData[0].soldiers -= 1;
+                                castleData[0].population -= 1;
                                 soldierfightnum.textContent = (parseInt(soldierfightnum.textContent) - 1);
                                 howmanytimes -= 1;
                                 if (howmanytimes >= 0){
                                     setTimeout(takeasoldier, 100);
                                 }else {
                                     fightDataDisplay.style.display = "none";
-                                    playerCastle.children.forEach(child => {
-                                        child.userData.soldiers += 1;
-                                        child.userData.population += 1;
-                                    });
-                                    playerCastle.userData.soldiers += 1;
-                                    playerCastle.userData.population += 1;
+                                    castleData[0].soldiers += 1;
+                                    castleData[0].population += 1;
                                     showalert('invasion succesful');
                                 }
                             }else {
                                 if (strengthv < 0.5){
                                     // remove the castle from allcastles list
-                                    playerCastle.children.forEach(child => {
-                                        child.userData.gold += selectedCastle.children[1].userData.gold;
-                                        playerCastle.userData.gold += selectedCastle.children[1].userData.gold;
-                                    });
+                                    castleData[0].gold += sodata.gold;
                                     allcastles.forEach((castle, index) => {
                                         if (castle === selectedCastle) {
                                             allcastles.splice(index, 1);
@@ -2480,7 +2476,7 @@
                                         fightDataDisplay.style.display = "none";
                                     }, 3000);
                                     showalert('you won!');
-                                }else if (playerCastle.children[1].userData.soldiers < 1){
+                                }else if (castleData[0].soldiers < 1){
                                     let initialplayerpositiony = playerCastle.position.y;
                                     moveObjectToTarget(3000, playerCastle, playerCastle.position.x, -80, playerCastle.position.z);
                                     createthenewcastle("castle", 0, 7, 0, 0);
@@ -2504,18 +2500,18 @@
                         }
 
                     }else {
-                        if (selectedCastle.children[0].userData.king == playerName){
+                        if (sodata.king == playerName){
                             console.log('wrong king');
                             showalert('you can not invade yourself');
-                        }else if (playerCastle.children[0].userData.soldiers < parseInt(snsf)){
+                        }else if (castleData[0].soldiers < parseInt(snsf)){
                             showalert('you do not have enough soldiers');
-                        }else if (selectedCastle.children[0].userData.friend == true){
+                        }else if (castleData[0].friend == true){
                             showalert('you can not attack a friend');
                         }
                     }
                 }else {
                     console.log('no castle selected');
-                    if (playerCastle){
+                    if (!selectedObject){
                         showalert('no castle selected');
                     }else {
                         showalert('your castle was not found');
@@ -2524,7 +2520,13 @@
             }else if (sns == "battle"){
                 if (selectedObject && playerCastle){
                     const selectedCastle = selectedObject.parent;
-                    if (selectedCastle.children[0].userData.king != playerName && playerCastle.children[0].userData.soldiers >= parseInt(snsf) && selectedCastle.children[0].userData.friend == false){
+                    let sodata;
+                    castleData.forEach(child => {
+                        if (child.king == selectedObject.userData.playername){
+                            sodata = child;
+                        }
+                    });
+                    if (sodata.king != playerName && castleData[0].soldiers >= parseInt(snsf) && sodata.friend == false){
                         let soldierfightnum = document.getElementById('soldierfightnum');
                         let fightDataDisplay = document.getElementById('fightDataDisplay');
                         fightDataDisplay.style.display = "flex";
@@ -2533,42 +2535,29 @@
                         let howmanytimes = parseInt(snsf);
                         takeasoldier();
                         function takeasoldier(){
-                            if (selectedCastle.children[1].userData.soldiers > 0 && playerCastle.children[1].userData.soldiers > 0){
-                                selectedCastle.children.forEach(child => {
-                                    child.userData.soldiers -= 1;
-                                    child.userData.population -= 1;
-                                    updateUserDataDisplay(child.userData);
-                                });
-                                selectedCastle.userData.soldiers -= 1;
-                                selectedCastle.userData.population -= 1;
-
-                                playerCastle.children.forEach(child => {
-                                    child.userData.soldiers -= 1;
-                                    child.userData.population -= 1;
-                                });
-                                playerCastle.userData.soldiers -= 1;
-                                playerCastle.userData.population -= 1;
+                            if (sodata.soldiers > 0 && castleData[0].soldiers > 0){
+                                
+                                sodata.soldiers -= 1;
+                                sodata.population -= 1;
+                                updateUserDataDisplay(sodata);
+                                
+                                castleData[0].soldiers -= 1;
+                                castleData[0].population -= 1;
                                 soldierfightnum.textContent = (parseInt(soldierfightnum.textContent) - 1);
                                 howmanytimes -= 1;
                                 if (howmanytimes >= 0){
                                     setTimeout(takeasoldier, 100);
                                 }else {
                                     fightDataDisplay.style.display = "none";
-                                    playerCastle.children.forEach(child => {
-                                        child.userData.soldiers += 1;
-                                        child.userData.population += 1;
-                                    });
-                                    playerCastle.userData.soldiers += 1;
-                                    playerCastle.userData.population += 1;
+                                    castleData[0].soldiers += 1;
+                                    castleData[0].population += 1;
                                     showalert('battle succesful');
                                 }
                             }else {
-                                if (selectedCastle.children[1].userData.soldiers < 1){
+                                if (sodata.soldiers < 1){
                                     // remove the castle from allcastles list
-                                    playerCastle.children.forEach(child => {
-                                        child.userData.gold += selectedCastle.children[1].userData.gold;
-                                    });
-                                    playerCastle.userData.gold += selectedCastle.children[1].userData.gold;
+                                    castleData[0].gold += sodata.gold;
+                                    
                                     allcastles.forEach((castle, index) => {
                                         if (castle === selectedCastle) {
                                             allcastles.splice(index, 1);
@@ -2605,18 +2594,18 @@
                         }
 
                     }else {
-                        if (selectedCastle.children[0].userData.king == playerName){
+                        if (sodata.king == playerName){
                             console.log('wrong king');
                             showalert('you can not attack yourself');
-                        }else if (playerCastle.children[0].userData.soldiers < parseInt(snsf)){
+                        }else if (castleData[0].soldiers < parseInt(snsf)){
                             showalert('you do not have enough soldiers');
-                        }else if (selectedCastle.children[0].userData.friend == true){
+                        }else if (castleData[0].friend == true){
                             showalert('you can not attack a friend');
                         }
                     }
                 }else {
                     console.log('no castle selected');
-                    if (playerCastle){
+                    if (!selectedObject){
                         showalert('no castle selected');
                     }else {
                         showalert('your castle was not found');
@@ -2633,46 +2622,38 @@
             if (selectedObject && playerCastle && sellnow == true) {
                 sellnow = false;
                 const selectedCastle = selectedObject.parent;
+                let sodata;
+                castleData.forEach(child => {
+                    if (child.king == selectedObject.userData.playername){
+                        sodata = child;
+                    }
+                });
                 if (parseInt(siv) == siv){
-                    if (selectedCastle.children[0].userData.king != playerName && selectedCastle.children[0].userData.gold >= parseInt(siv) && parseInt(ssn) >= (parseInt(siv) / 2)){
-                        if (playerCastle.children[0].userData[ssi] >= parseInt(ssn)){
-                            playerCastle.userData[ssi] -= parseInt(ssn);
-                            playerCastle.userData.gold += parseInt(siv);
-                            playerCastle.children.forEach(child => {
-                                child.userData[ssi] -= parseInt(ssn);
-                                child.userData.gold += parseInt(siv);
-                                if (ssi == "soldiers") {
-                                    child.userData.population -= parseInt(ssn);
-                                }
-                            });
+                    if (sodata.king != playerName && sodata.gold >= parseInt(siv) && parseInt(ssn) >= (parseInt(siv) / 2)){
+                        if (castleData[0][ssi] >= parseInt(ssn)){
+                            castleData[0][ssi] -= parseInt(ssn);
+                            castleData[0].gold += parseInt(siv);
                             if (ssi == "soldiers") {
-                                playerCastle.userData.population -= parseInt(ssn);
+                                castleData[0].population -= parseInt(ssn);
                             }
-                            updateUserDataDisplay(playerCastle.children[0].userData);
-                            selectedCastle.userData[ssi] += parseInt(ssn);
-                            selectedCastle.userData.gold -= parseInt(siv);
-                            selectedCastle.children.forEach(playercastlechild => {
-                                playercastlechild.userData.gold -= parseInt(siv);
-                                playercastlechild.userData[ssi] += parseInt(ssn);
-                                if (ssi == "soldiers") {
-                                    playercastlechild.userData.population += parseInt(ssn);
-                                }
-                            });
+                            updateUserDataDisplay(castleData[0]);
+                            sodata[ssi] += parseInt(ssn);
+                            sodata.gold -= parseInt(siv);
                             if (ssi == "soldiers") {
-                                selectedCastle.userData.population += parseInt(ssn);
+                                sodata.population += parseInt(ssn);
                             }
-                            updateUserDataDisplay(selectedCastle.userData);
+                            updateUserDataDisplay(sodata);
                         }else {
-                            console.log(selectedCastle.children[0].userData.king + ' does not have enough ' + ssi);
-                            if (playerCastle.children[0].userData[ssi] < parseInt(ssn)){
+                            console.log(sodata.king + ' does not have enough ' + ssi);
+                            if (castleData[0][ssi] < parseInt(ssn)){
                                 showalert('you do not have enough ' + ssi);
                             }
                         }
                     }else {
-                        if (selectedCastle.children[0].userData.king == playerName){
+                        if (sodata.king == playerName){
                             console.log('wrong king');
                             showalert('you can not sell too yourself');
-                        }else if (selectedCastle.children[0].userData.gold < parseInt(siv)){
+                        }else if (sodata.gold < parseInt(siv)){
                             console.log('not enough gold');
                             showalert('you do not have enough gold');
                         }else if (parseInt(ssn) <= (parseInt(siv) / 2)){
@@ -2696,130 +2677,128 @@
         }
 
         function updateCastleResources() {
-            addedcastle.forEach(castle => {
-                if (castle.userData.ricefields > 0 && castle.userData.workers > 0) {
-                    castle.userData.rice += castle.userData.ricefields;
-                    castle.children.forEach(child => {
-                        castle.userData.rice += castle.userData.ricefields;
+            let ucr = true;
+            addedcastle.forEach(castlee => {
+                /*let cup;
+                addedcastle.forEach(child => {
+                    if (child.userData.playername){
+                        cup = child;
+                    }
+                });*/
+                if (ucr == true){
+                    let castle;
+                    castleData.forEach(child => {
+                        if (child.king == castlee.userData.playername){
+                            castle = child;
+                        }
                     });
-                }
-                if (castle.userData.cornfields > 0 && castle.userData.workers > 0) {
-                    castle.userData.corn += castle.userData.cornfields;
-                    castle.children.forEach(child => {
-                        castle.userData.corn += castle.userData.cornfields;
-                    });
-                }
-                if (castle.userData.cows > 0 && castle.userData.workers > 0) {
-                    castle.userData.milk += castle.userData.cows;
-                    castle.children.forEach(child => {
-                        castle.userData.milk += castle.userData.cows;
-                    });
-                }
-                if (castle.userData.chickens > 0 && castle.userData.workers > 0) {
-                    castle.userData.eggs += castle.userData.chickens;
-                    castle.children.forEach(child => {
-                        castle.userData.eggs += castle.userData.chickens;
-                    });
-                }
-                if (castle.userData.goats > 0 && castle.userData.workers > 0) {
-                    castle.userData.meat += castle.userData.goats;
-                    castle.children.forEach(child => {
-                        castle.userData.meat += castle.userData.goats;
-                    });
-                }
-                if (selectedObject){
-                    updateUserDataDisplay(selectedObject.userData);
+                    if (castle.ricefields > 0 && castle.workers > 0) {
+                        castle.rice += castle.ricefields;
+                    }
+                    if (castle.cornfields > 0 && castle.workers > 0) {
+                        castle.corn += castle.cornfields;
+                    }
+                    if (castle.cows > 0 && castle.workers > 0) {
+                        castle.milk += castle.cows;
+                    }
+                    if (castle.chickens > 0 && castle.workers > 0) {
+                        castle.eggs += castle.chickens;
+                    }
+                    if (castle.goats > 0 && castle.workers > 0) {
+                        castle.meat += castle.goats;
+                    }
+
+                    if (selectedObject){
+                        updateUserDataDisplay(castle);
+                    }
+
+                    ucr = false;
                 }
                 // Update every 30 seconds
             });
+            ucr = true;
         }
 
         function updatePopulation() {
-            addedcastle.forEach(castle => {
-                if (castle.userData.rice > 1) {
-                    castle.userData.population += 5;
-                    castle.userData.rice -= 1;
-                }else if (castle.userData.corn > 1){
-                    castle.userData.population += 5;
-                    castle.userData.corn -= 1;
-                }else if (castle.userData.eggs > 5){
-                    castle.userData.population += 5;
-                    castle.userData.eggs -= 5;
-                }else if (castle.userData.meat > 5){
-                    castle.userData.population += 5;
-                    castle.userData.meat -= 5;
-                }else {
-                    /*
-                    {
-                        position: { x: -60, z: -60 }, force: 10, soldiers: 10, gold: 500, size: 1, type: 'castle',
-                        strength: 15, friend: true, population: 30, queen: 'nobody', king: 'Guest',
-                        horses: 0, cows: 2, goats: 2, chickens: 2, ricefields: 0, cornfields: 0,
-                        workers: 10, weapons: 10, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 1
+            let up = true;
+            addedcastle.forEach(castlee => {
+                /*let cup;
+                addedcastle.forEach(child => {
+                    if (child.userData.playername){
+                        cup = child;
                     }
-                    */
-                    if ((castle.userData.population - castle.userData.workers - castle.userData.soldiers) < 2){
-                        castle.userData.population -= 2;
-                    }else if ((castle.userData.population - castle.userData.workers) < 2){
-                        castle.userData.soldiers -= 2;
-                        castle.userData.population -= 2;
-                    }else if ((castle.userData.population - castle.userData.soldiers) < 2){
-                        castle.userData.workers -= 2;
-                        castle.userData.population -= 2;
-                    }
-                    if (castle.userData.population <= 0){
-                        castle.userData.position = {
-                            x: 0,
-                            z: 0
+                });*/
+                if (up == true) {
+                    let castle;
+                    castleData.forEach(child => {
+                        if (child.king == castlee.userData.playername){
+                            castle = child;
                         }
-                        playerCastle.position.x = castle.userData.position.x;
-                        playerCastle.position.z = castle.userData.position.z;
-                        castle.userData.force = 10;
-                        castle.userData.soldiers = 10;
-                        castle.userData.gold = 50;
-                        castle.userData.size = 1;
-                        castle.userData.type = 'castle';
-                        castle.userData.strength = 15;
-                        castle.userData.friend = true;
-                        castle.userData.population = 30;
-                        castle.userData.queen = 'nobody';
-                        castle.userData.king = document.getElementById('username').innerHTML;
-                        castle.userData.horses = 0;
-                        castle.userData.cows = 2;
-                        castle.userData.goats = 2;
-                        castle.userData.chickens = 2;
-                        castle.userData.ricefields = 0;
-                        castle.userData.cornfields = 0;
-                        castle.userData.workers = 10;
-                        castle.userData.weapons = 10;
-                        castle.userData.popularity = 0;
-                        castle.userData.meat = 0;
-                        castle.userData.eggs = 0;
-                        castle.userData.milk = 0;
-                        castle.userData.rice = 0;
-                        castle.userData.corn = 0;
-                        castle.userData.level = 1;
-                        updateUserDataDisplay(castle.userData);
-                        showalert('you lost the attack! the game restarted');
+                    });
+                    if (castle.rice > 5) {
+                        castle.population += 5;
+                        castle.rice -= 5;
+                    }else if (castle.corn > 5){
+                        castle.population += 5;
+                        castle.corn -= 5;
+                    }else if (castle.eggs > 5){
+                        castle.population += 5;
+                        castle.eggs -= 5;
+                    }else if (castle.meat > 5){
+                        castle.population += 5;
+                        castle.meat -= 5;
+                    }else {
+                        /*
+                        {
+                            position: { x: -60, z: -60 }, force: 10, soldiers: 10, gold: 500, size: 1, type: 'castle',
+                            strength: 15, friend: true, population: 30, queen: 'nobody', king: 'Guest',
+                            horses: 0, cows: 2, goats: 2, chickens: 2, ricefields: 0, cornfields: 0,
+                            workers: 10, weapons: 10, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 1
+                        }
+                        */
+                        if ((castle.population - castle.workers - castle.soldiers) < 2){
+                            castle.population -= 2;
+                        }else if ((castle.population - castle.workers) < 2){
+                            castle.soldiers -= 2;
+                            castle.population -= 2;
+                        }else if ((castle.population - castle.soldiers) < 2){
+                            castle.workers -= 2;
+                            castle.population -= 2;
+                        }
+                        if (castle.population <= 0){
+                            resetplayer();
+                        }
                     }
-                }
-                if (selectedObject){
-                    updateUserDataDisplay(selectedObject.userData);
+                    if (selectedObject){
+                        updateUserDataDisplay(castle);
+                    }
+                    up = false;
                 }
                 // Update every 30 seconds
             });
+            up = true;
         }
 
         function updateCastleStrength() {
             addedcastle.forEach(castle => {
-                castle.userData.strength = (castle.userData.soldiers / 2) + castle.userData.weapons;
-                kingname = castle.userData.king;
+                /*let cup;
+                addedcastle.forEach(child => {
+                    if (child.userData.playername){
+                        cup = child;
+                    }
+                });*/
+                let castlee;
+                castleData.forEach(child => {
+                    if (child.king == castle.userData.playername){
+                        castlee = child;
+                    }
+                });
+                castle.userData.strength = (castlee.soldiers / 2) + castlee.weapons;
+                kingname = castle.userData.playername;
                 username = document.getElementById('username');
 
                 // update castle material
-                const material = getMaterial(castle.userData.strength);
-                castle.children.forEach(child => {
-                    child.material = material;
-                });
+                const material = getMaterial(castlee.strength);
                 username.innerHTML = playerName;
                 if (kingname == username.innerHTML){
                     let populationelement = document.getElementById('population');
@@ -2827,10 +2806,10 @@
                     let soldierelement = document.getElementById('soldiers');
                     let goldelement = document.getElementById('gold');
 
-                    goldelement.innerHTML = castle.userData.gold;
-                    workerselement.innerHTML = castle.userData.workers;
-                    soldierelement.innerHTML = castle.userData.soldiers;
-                    populationelement.innerHTML = castle.userData.population;
+                    goldelement.innerHTML = castlee.gold;
+                    workerselement.innerHTML = castlee.workers;
+                    soldierelement.innerHTML = castlee.soldiers;
+                    populationelement.innerHTML = castlee.population;
                     // playerCastle = castle parent
                     playerCastle = castle.parent;
                 }
@@ -2870,7 +2849,7 @@
                 tree.position.x = Math.random() * 1000 - 500;
                 tree.position.z = Math.random() * 1000 - 500;
             } while (checkCollision(tree, trees) || checkCollision(tree, allcastles));
-            
+
             trees.push(tree);
             scene.add(tree);
         }
