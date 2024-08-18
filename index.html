@@ -2615,9 +2615,9 @@
                     animals += `<strong>${key}:</strong> ${value}<br>`;
                 }else if(key == "force" || key == "strength" || key == "weapons"){
                     strength += `<strong>${key}:</strong> ${value}<br>`;
-                }else if(key == "meat" || key == "milk" || key == "eggs" || key == "rice" || key == "corn"){
-                    resources += `<strong>${key}:</strong> ${value}<br>`;
                 }else if(key == "meat" || key == "milk" || key == "eggs" || key == "rice" || key == "corn" || key == "ricefields" || key == "cornfields"){
+                    resources += `<strong>${key}:</strong> ${value}<br>`;
+                }else if(key == "friend"){
                     displayTextHeader += `<div class="smallinfobox"><strong>${key}:</strong> ${value}</div>`;
                 }else if(key == "soldiers" || key == "workers" || key == "population"){
                     poeple += `<strong>${key}:</strong> ${value}<br>`;
