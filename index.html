@@ -2251,7 +2251,12 @@
         }
 
         function resetplayer() {
-            castleData[0] = playerat0;
+            castleData[0] = {
+                position: { x: 0, z: 0 }, force: 10, soldiers: 10, gold: 50, size: 1, type: 'castle',
+                strength: 15, friend: true, population: 30, queen: 'nobody', king: playerName,
+                horses: 0, cows: 2, goats: 2, chickens: 2, ricefields: 0, cornfields: 0,
+                workers: 10, weapons: 10, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 1
+            };
             updateUserDataDisplay(castleData[0]);
         }
 
