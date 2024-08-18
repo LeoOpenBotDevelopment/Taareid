@@ -30,6 +30,8 @@
             /* make it scrollable */
             overflow-y: auto;
             max-height: 80vh;
+            max-width: 30vh;
+            min-width: 20vh;
         }
         #informationbar{
             font-weight: bold;
@@ -2583,13 +2585,44 @@
             sellnow = true;
         }
 
-        function updateUserDataDisplay(userData) {
+        /*function updateUserDataDisplay(userData) {
             const userDataDisplay = document.getElementById('userDataDisplay');
             let displayText = `<strong>${userData.king}'s ${userData.type} info:</strong><br>`;
             for (const [key, value] of Object.entries(userData)) {
                 displayText += `<div class="smallinfobox"><strong>${key}:</strong> ${value}</div>`;
             }
             userDataDisplay.innerHTML = displayText;
+        }*/
+        function updateUserDataDisplay(userData) {
+            const userDataDisplay = document.getElementById('userDataDisplay');
+            let displayTextHeader = `<strong>${userData.king}'s ${userData.type} info:</strong><br>`;
+            let displayextratext = ``;
+            let animals = ``;
+            let strength = ``;
+            //resources
+            let resources = ``;
+            let poeple = ``;
+            for (const [key, value] of Object.entries(userData)) {
+                if (key == "cows" || key == "goats" || key == "chickens" || key == "horses"){
+                    animals += `<strong>${key}:</strong> ${value}<br>`;
+                }else if(key == "force" || key == "strength" || key == "weapons"){
+                    strength += `<strong>${key}:</strong> ${value}<br>`;
+                }else if(key == "meat" || key == "milk" || key == "eggs" || key == "rice" || key == "corn"){
+                    resources += `<strong>${key}:</strong> ${value}<br>`;
+                }else if(key == "meat" || key == "milk" || key == "eggs" || key == "rice" || key == "corn" || key == "ricefields" || key == "cornfields"){
+                    displayTextHeader += `<div class="smallinfobox"><strong>${key}:</strong> ${value}</div>`;
+                }else if(key == "soldiers" || key == "workers" || key == "population"){
+                    poeple += `<strong>${key}:</strong> ${value}<br>`;
+                }else if (key != "position" && key != "king" && key != "queen" && key != "size" && key != "friend"){
+                    displayextratext += `<div class="smallinfobox"><strong>${key}:</strong> ${value}</div>`;
+                }
+            }
+            let animalsk = `<div class="smallinfobox2"><strong>animals:</strong><br> ${animals}</div>`;
+            let strengthk = `<div class="smallinfobox2"><strong>strength:</strong><br> ${strength}</div>`;
+            //resources
+            let resourcesk = `<div class="smallinfobox2"><strong>resources:</strong><br> ${resources}</div>`;
+            let poeplek = `<div class="smallinfobox2"><strong>poeple:</strong><br> ${poeple}</div>`;
+            userDataDisplay.innerHTML = displayTextHeader + animalsk + strengthk + resourcesk + poeplek + displayextratext;
         }
 
         function updateCastleResources() {
