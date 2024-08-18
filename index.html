@@ -2617,11 +2617,11 @@
                     strength += `<strong>${key}:</strong> ${value}<br>`;
                 }else if(key == "meat" || key == "milk" || key == "eggs" || key == "rice" || key == "corn" || key == "ricefields" || key == "cornfields"){
                     resources += `<strong>${key}:</strong> ${value}<br>`;
-                }else if(key == "friend"){
+                }else if(key == "friend" || key == "gold"){
                     displayTextHeader += `<div class="smallinfobox"><strong>${key}:</strong> ${value}</div>`;
                 }else if(key == "soldiers" || key == "workers" || key == "population"){
                     poeple += `<strong>${key}:</strong> ${value}<br>`;
-                }else if (key != "position" && key != "king" && key != "queen" && key != "size" && key != "friend"){
+                }else if (key != "position" && key != "king" && key != "queen" && key != "size" && key != "friend" && key != "type"){
                     displayextratext += `<div class="smallinfobox"><strong>${key}:</strong> ${value}</div>`;
                 }
             }
