@@ -2818,7 +2818,7 @@
             });
         }
 
-        let treenum = 350;
+        let treenum = 300;
         let trees = [];
 
         for (let i = 0; i < treenum; i++) {
@@ -2848,8 +2848,8 @@
 
             // Position des Baumes zufällig setzen und Kollisionen vermeiden
             do {
-                tree.position.x = Math.random() * 1750 - 875;
-                tree.position.z = Math.random() * 1750 - 875;
+                tree.position.x = Math.random() * 1200 - 600;
+                tree.position.z = Math.random() * 1200 - 600;
             } while (checkCollision(tree, trees) || checkCollision(tree, allcastles));
 
             trees.push(tree);
