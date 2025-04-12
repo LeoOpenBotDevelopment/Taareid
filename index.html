@@ -2848,8 +2848,8 @@
 
             // Position des Baumes zufällig setzen und Kollisionen vermeiden
             do {
-                tree.position.x = Math.random() * 1000 - 500;
-                tree.position.z = Math.random() * 1000 - 500;
+                tree.position.x = Math.random() * 1750 - 875;
+                tree.position.z = Math.random() * 1750 - 875;
             } while (checkCollision(tree, trees) || checkCollision(tree, allcastles));
 
             trees.push(tree);
