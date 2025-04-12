@@ -22,6 +22,8 @@
             right: 20px;
             padding: 10px;
             background: rgba(0, 0, 0, 0.7);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             color: white;
             border-radius: 5px;
             font-family: Arial, sans-serif;
@@ -41,6 +43,8 @@
             height: 30px;
             width: 100vw;
             background: rgba(0, 0, 0, 0.7);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -66,6 +70,8 @@
         #informationbar button{
             border: none;
             background: rgba(0, 0, 0, 0.2);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             color: white;
             border-radius: 10px;
             padding: 5px 10px;
@@ -79,6 +85,8 @@
         #functions button{
             border: none;
             background: rgba(0, 0, 0, 0.7);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             color: white;
             border-radius: 10px;
             padding: 20px 10px;
@@ -113,6 +121,8 @@
         select{
             border: none;
             background: rgba(0, 0, 0, 0.2);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             color: white;
             border-radius: 5px;
             padding: 5px 10px;
@@ -128,6 +138,8 @@
           padding: 10px;
           width: 78%;
           background-color: rgba(0, 0, 0, 0.7);
+          -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
           color: white;
           border: none;
           border-radius: 5px;
@@ -140,6 +152,8 @@
           padding: 10px;
           width: 20%;
           background-color: rgba(0, 0, 0, 0.7);
+          -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
           color: white;
           border: none;
           border-radius: 5px;
@@ -184,6 +198,8 @@
             left: 25%;
             top: 5%;
             background: rgba(0, 0, 0, 0.7);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             border-radius: 10px;
             width: 50%;
             padding: 20px;
@@ -198,6 +214,8 @@
         #editbox button{
             border: none;
             background: rgba(0, 0, 0, 0.2);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             color: white;
             border-radius: 5px;
             padding: 5px 10px;
@@ -210,6 +228,8 @@
         }
         input[type="text"]{
             background: rgba(0, 0, 0, 0.2);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             color: white;
             border-radius: 5px;
             padding: 5px 10px;
@@ -241,6 +261,8 @@
             font-weight: bold;
             color: white;
             background: rgba(0, 0, 0, 0.7);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             z-index: 350;
             transition: 1s;
         }
@@ -260,6 +282,8 @@
             display: flex;
             justify-content: space-between;
             background: rgba(0, 0, 0, 0.2);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             color: white;
             border-radius: 5px;
             padding: 10px;
@@ -273,11 +297,15 @@
             width: 100vw;
             height: 100vh;
             background: rgba(0, 0, 0, 0.1);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             z-index: 300;
         }
         .smallinfobox2{
             width: 90%;
             background: rgba(0, 0, 0, 0.2);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             color: white;
             border-radius: 5px;
             padding: 10px;
@@ -635,6 +663,30 @@
                 strength: 100, friend: false, population: 800, queen: 'nobody', king: 'lar',
                 horses: 5, cows: 10, goats: 10, chickens: 100, ricefields: 0, cornfields: 0,
                 workers: 200, weapons: 10, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 3
+            },
+            {
+                position: { x: -400, z: 320 }, force: 60, soldiers: 300, gold: 200000, size: 2, type: 'castle',
+                strength: 120, friend: false, population: 1200, queen: 'nobody', king: 'aric',
+                horses: 3, cows: 7, goats: 12, chickens: 25, ricefields: 1, cornfields: 2,
+                workers: 80, weapons: 50, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 2
+            },
+            {
+                position: { x: 500, z: 500 }, force: 150, soldiers: 2000, gold: 2000000, size: 4, type: 'citadel',
+                strength: 300, friend: false, population: 5000, queen: 'nobody', king: 'solmir',
+                horses: 25, cows: 30, goats: 40, chickens: 100, ricefields: 5, cornfields: 5,
+                workers: 300, weapons: 200, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 4
+            },
+            {
+                position: { x: -600, z: -450 }, force: 20, soldiers: 100, gold: 50000, size: 1, type: 'watchtower',
+                strength: 80, friend: true, population: 200, queen: 'nobody', king: 'lyra',
+                horses: 2, cows: 3, goats: 5, chickens: 10, ricefields: 0, cornfields: 1,
+                workers: 30, weapons: 20, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 1
+            },
+            {
+                position: { x: 350, z: -600 }, force: 90, soldiers: 750, gold: 750000, size: 3, type: 'stronghold',
+                strength: 200, friend: false, population: 2500, queen: 'nobody', king: 'drakar',
+                horses: 15, cows: 12, goats: 18, chickens: 60, ricefields: 2, cornfields: 3,
+                workers: 150, weapons: 120, popularity: 0, meat: 0, eggs: 0, milk: 0, rice: 0, corn: 0, level: 3
             }
         ];
         let playerat0 = {
